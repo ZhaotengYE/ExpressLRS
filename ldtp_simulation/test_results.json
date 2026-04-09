@@ -1,0 +1,2147 @@
+[
+  {
+    "name": "uniform_5pct",
+    "status": "PASS",
+    "stats": {
+      "config": {
+        "tick_hz": 20,
+        "tick_ms": 50,
+        "total_ticks": 200,
+        "channel": "Uniform 5%",
+        "seed": 42
+      },
+      "ul_total": 200,
+      "dl_total": 200,
+      "ul_lost": 9,
+      "dl_lost": 8,
+      "ul_loss_pct": 4.5,
+      "dl_loss_pct": 4.0,
+      "ul_reliable_delivered": 3,
+      "ul_reliable_failed": 0,
+      "dl_reliable_delivered": 2,
+      "dl_reliable_failed": 0,
+      "total_retx": 1,
+      "standalone_acks": 0,
+      "ul_link_quality": 92,
+      "dl_link_quality": 100,
+      "ul_rto_final": 2,
+      "dl_rto_final": 2,
+      "ul_rtt_est": 1.0,
+      "dl_rtt_est": 1.0,
+      "ul_avg_latency": 2.0,
+      "dl_avg_latency": 1.0,
+      "ul_max_latency": 4,
+      "dl_max_latency": 1,
+      "ul_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "SET_WAYPOINT",
+          "latency": 1
+        },
+        {
+          "seq": 1,
+          "label": "ARM",
+          "latency": 4
+        },
+        {
+          "seq": 2,
+          "label": "RTH",
+          "latency": 1
+        }
+      ],
+      "dl_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "LOW_BATTERY",
+          "latency": 1
+        },
+        {
+          "seq": 1,
+          "label": "GPS_DEGRADED",
+          "latency": 1
+        }
+      ],
+      "ul_failed_detail": [],
+      "dl_failed_detail": [],
+      "retx_events": [
+        {
+          "dir": "UL",
+          "tick": 53,
+          "seq": 1,
+          "attempt": 1
+        }
+      ]
+    }
+  },
+  {
+    "name": "uniform_15pct",
+    "status": "PASS",
+    "stats": {
+      "config": {
+        "tick_hz": 20,
+        "tick_ms": 50,
+        "total_ticks": 200,
+        "channel": "Uniform 15%",
+        "seed": 42
+      },
+      "ul_total": 200,
+      "dl_total": 200,
+      "ul_lost": 31,
+      "dl_lost": 25,
+      "ul_loss_pct": 15.5,
+      "dl_loss_pct": 12.5,
+      "ul_reliable_delivered": 3,
+      "ul_reliable_failed": 0,
+      "dl_reliable_delivered": 2,
+      "dl_reliable_failed": 0,
+      "total_retx": 2,
+      "standalone_acks": 0,
+      "ul_link_quality": 86,
+      "dl_link_quality": 90,
+      "ul_rto_final": 2,
+      "dl_rto_final": 2,
+      "ul_rtt_est": 1.0,
+      "dl_rtt_est": 1.0,
+      "ul_avg_latency": 4.0,
+      "dl_avg_latency": 1.0,
+      "ul_max_latency": 10,
+      "dl_max_latency": 1,
+      "ul_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "SET_WAYPOINT",
+          "latency": 1
+        },
+        {
+          "seq": 1,
+          "label": "ARM",
+          "latency": 10
+        },
+        {
+          "seq": 2,
+          "label": "RTH",
+          "latency": 1
+        }
+      ],
+      "dl_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "LOW_BATTERY",
+          "latency": 1
+        },
+        {
+          "seq": 1,
+          "label": "GPS_DEGRADED",
+          "latency": 1
+        }
+      ],
+      "ul_failed_detail": [],
+      "dl_failed_detail": [],
+      "retx_events": [
+        {
+          "dir": "UL",
+          "tick": 53,
+          "seq": 1,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 59,
+          "seq": 1,
+          "attempt": 2
+        }
+      ]
+    }
+  },
+  {
+    "name": "uniform_30pct",
+    "status": "PASS",
+    "stats": {
+      "config": {
+        "tick_hz": 20,
+        "tick_ms": 50,
+        "total_ticks": 200,
+        "channel": "Uniform 30%",
+        "seed": 42
+      },
+      "ul_total": 200,
+      "dl_total": 200,
+      "ul_lost": 63,
+      "dl_lost": 67,
+      "ul_loss_pct": 31.5,
+      "dl_loss_pct": 33.5,
+      "ul_reliable_delivered": 3,
+      "ul_reliable_failed": 0,
+      "dl_reliable_delivered": 2,
+      "dl_reliable_failed": 0,
+      "total_retx": 2,
+      "standalone_acks": 0,
+      "ul_link_quality": 78,
+      "dl_link_quality": 72,
+      "ul_rto_final": 3,
+      "dl_rto_final": 2,
+      "ul_rtt_est": 1,
+      "dl_rtt_est": 1.0,
+      "ul_avg_latency": 4.0,
+      "dl_avg_latency": 1.0,
+      "ul_max_latency": 7,
+      "dl_max_latency": 1,
+      "ul_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "SET_WAYPOINT",
+          "latency": 4
+        },
+        {
+          "seq": 1,
+          "label": "ARM",
+          "latency": 7
+        },
+        {
+          "seq": 2,
+          "label": "RTH",
+          "latency": 1
+        }
+      ],
+      "dl_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "LOW_BATTERY",
+          "latency": 1
+        },
+        {
+          "seq": 1,
+          "label": "GPS_DEGRADED",
+          "latency": 1
+        }
+      ],
+      "ul_failed_detail": [],
+      "dl_failed_detail": [],
+      "retx_events": [
+        {
+          "dir": "UL",
+          "tick": 24,
+          "seq": 0,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 54,
+          "seq": 1,
+          "attempt": 1
+        }
+      ]
+    }
+  },
+  {
+    "name": "uniform_50pct",
+    "status": "PASS",
+    "stats": {
+      "config": {
+        "tick_hz": 20,
+        "tick_ms": 50,
+        "total_ticks": 200,
+        "channel": "Uniform 50%",
+        "seed": 42
+      },
+      "ul_total": 200,
+      "dl_total": 200,
+      "ul_lost": 102,
+      "dl_lost": 95,
+      "ul_loss_pct": 51.0,
+      "dl_loss_pct": 47.5,
+      "ul_reliable_delivered": 3,
+      "ul_reliable_failed": 0,
+      "dl_reliable_delivered": 2,
+      "dl_reliable_failed": 0,
+      "total_retx": 7,
+      "standalone_acks": 0,
+      "ul_link_quality": 54,
+      "dl_link_quality": 54,
+      "ul_rto_final": 4,
+      "dl_rto_final": 2,
+      "ul_rtt_est": null,
+      "dl_rtt_est": 1.0,
+      "ul_avg_latency": 26.67,
+      "dl_avg_latency": 1.0,
+      "ul_max_latency": 61,
+      "dl_max_latency": 1,
+      "ul_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "SET_WAYPOINT",
+          "latency": 6
+        },
+        {
+          "seq": 2,
+          "label": "RTH",
+          "latency": 13
+        },
+        {
+          "seq": 1,
+          "label": "ARM",
+          "latency": 61
+        }
+      ],
+      "dl_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "LOW_BATTERY",
+          "latency": 1
+        },
+        {
+          "seq": 1,
+          "label": "GPS_DEGRADED",
+          "latency": 1
+        }
+      ],
+      "ul_failed_detail": [],
+      "dl_failed_detail": [],
+      "retx_events": [
+        {
+          "dir": "UL",
+          "tick": 24,
+          "seq": 0,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 54,
+          "seq": 1,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 62,
+          "seq": 1,
+          "attempt": 2
+        },
+        {
+          "dir": "UL",
+          "tick": 74,
+          "seq": 2,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 78,
+          "seq": 1,
+          "attempt": 3
+        },
+        {
+          "dir": "UL",
+          "tick": 82,
+          "seq": 2,
+          "attempt": 2
+        },
+        {
+          "dir": "UL",
+          "tick": 110,
+          "seq": 1,
+          "attempt": 4
+        }
+      ]
+    }
+  },
+  {
+    "name": "uniform_70pct",
+    "status": "PASS",
+    "stats": {
+      "config": {
+        "tick_hz": 20,
+        "tick_ms": 50,
+        "total_ticks": 200,
+        "channel": "Uniform 70%",
+        "seed": 42
+      },
+      "ul_total": 200,
+      "dl_total": 200,
+      "ul_lost": 133,
+      "dl_lost": 142,
+      "ul_loss_pct": 66.5,
+      "dl_loss_pct": 71.0,
+      "ul_reliable_delivered": 3,
+      "ul_reliable_failed": 0,
+      "dl_reliable_delivered": 2,
+      "dl_reliable_failed": 0,
+      "total_retx": 13,
+      "standalone_acks": 0,
+      "ul_link_quality": 44,
+      "dl_link_quality": 32,
+      "ul_rto_final": 4,
+      "dl_rto_final": 4,
+      "ul_rtt_est": null,
+      "dl_rtt_est": null,
+      "ul_avg_latency": 27.67,
+      "dl_avg_latency": 65.5,
+      "ul_max_latency": 61,
+      "dl_max_latency": 125,
+      "ul_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "SET_WAYPOINT",
+          "latency": 6
+        },
+        {
+          "seq": 2,
+          "label": "RTH",
+          "latency": 16
+        },
+        {
+          "seq": 1,
+          "label": "ARM",
+          "latency": 61
+        }
+      ],
+      "dl_delivered_detail": [
+        {
+          "seq": 1,
+          "label": "GPS_DEGRADED",
+          "latency": 6
+        },
+        {
+          "seq": 0,
+          "label": "LOW_BATTERY",
+          "latency": 125
+        }
+      ],
+      "ul_failed_detail": [],
+      "dl_failed_detail": [],
+      "retx_events": [
+        {
+          "dir": "UL",
+          "tick": 24,
+          "seq": 0,
+          "attempt": 1
+        },
+        {
+          "dir": "DL",
+          "tick": 34,
+          "seq": 0,
+          "attempt": 1
+        },
+        {
+          "dir": "DL",
+          "tick": 42,
+          "seq": 0,
+          "attempt": 2
+        },
+        {
+          "dir": "UL",
+          "tick": 54,
+          "seq": 1,
+          "attempt": 1
+        },
+        {
+          "dir": "DL",
+          "tick": 58,
+          "seq": 0,
+          "attempt": 3
+        },
+        {
+          "dir": "UL",
+          "tick": 62,
+          "seq": 1,
+          "attempt": 2
+        },
+        {
+          "dir": "DL",
+          "tick": 64,
+          "seq": 1,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 74,
+          "seq": 2,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 78,
+          "seq": 1,
+          "attempt": 3
+        },
+        {
+          "dir": "UL",
+          "tick": 82,
+          "seq": 2,
+          "attempt": 2
+        },
+        {
+          "dir": "DL",
+          "tick": 90,
+          "seq": 0,
+          "attempt": 4
+        },
+        {
+          "dir": "UL",
+          "tick": 110,
+          "seq": 1,
+          "attempt": 4
+        },
+        {
+          "dir": "DL",
+          "tick": 154,
+          "seq": 0,
+          "attempt": 5
+        }
+      ]
+    }
+  },
+  {
+    "name": "uniform_90pct",
+    "status": "PARTIAL",
+    "stats": {
+      "config": {
+        "tick_hz": 20,
+        "tick_ms": 50,
+        "total_ticks": 200,
+        "channel": "Uniform 90%",
+        "seed": 42
+      },
+      "ul_total": 200,
+      "dl_total": 200,
+      "ul_lost": 177,
+      "dl_lost": 178,
+      "ul_loss_pct": 88.5,
+      "dl_loss_pct": 89.0,
+      "ul_reliable_delivered": 2,
+      "ul_reliable_failed": 0,
+      "dl_reliable_delivered": 1,
+      "dl_reliable_failed": 0,
+      "total_retx": 22,
+      "standalone_acks": 0,
+      "ul_link_quality": 16,
+      "dl_link_quality": 8,
+      "ul_rto_final": 4,
+      "dl_rto_final": 4,
+      "ul_rtt_est": null,
+      "dl_rtt_est": null,
+      "ul_avg_latency": 49.0,
+      "dl_avg_latency": 134.0,
+      "ul_max_latency": 64,
+      "dl_max_latency": 134,
+      "ul_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "SET_WAYPOINT",
+          "latency": 34
+        },
+        {
+          "seq": 1,
+          "label": "ARM",
+          "latency": 64
+        }
+      ],
+      "dl_delivered_detail": [
+        {
+          "seq": 1,
+          "label": "GPS_DEGRADED",
+          "latency": 134
+        }
+      ],
+      "ul_failed_detail": [],
+      "dl_failed_detail": [],
+      "retx_events": [
+        {
+          "dir": "UL",
+          "tick": 24,
+          "seq": 0,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 32,
+          "seq": 0,
+          "attempt": 2
+        },
+        {
+          "dir": "DL",
+          "tick": 34,
+          "seq": 0,
+          "attempt": 1
+        },
+        {
+          "dir": "DL",
+          "tick": 42,
+          "seq": 0,
+          "attempt": 2
+        },
+        {
+          "dir": "UL",
+          "tick": 48,
+          "seq": 0,
+          "attempt": 3
+        },
+        {
+          "dir": "UL",
+          "tick": 54,
+          "seq": 1,
+          "attempt": 1
+        },
+        {
+          "dir": "DL",
+          "tick": 58,
+          "seq": 0,
+          "attempt": 3
+        },
+        {
+          "dir": "UL",
+          "tick": 62,
+          "seq": 1,
+          "attempt": 2
+        },
+        {
+          "dir": "DL",
+          "tick": 64,
+          "seq": 1,
+          "attempt": 1
+        },
+        {
+          "dir": "DL",
+          "tick": 72,
+          "seq": 1,
+          "attempt": 2
+        },
+        {
+          "dir": "UL",
+          "tick": 74,
+          "seq": 2,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 78,
+          "seq": 1,
+          "attempt": 3
+        },
+        {
+          "dir": "UL",
+          "tick": 82,
+          "seq": 2,
+          "attempt": 2
+        },
+        {
+          "dir": "DL",
+          "tick": 88,
+          "seq": 1,
+          "attempt": 3
+        },
+        {
+          "dir": "DL",
+          "tick": 90,
+          "seq": 0,
+          "attempt": 4
+        },
+        {
+          "dir": "UL",
+          "tick": 98,
+          "seq": 2,
+          "attempt": 3
+        },
+        {
+          "dir": "UL",
+          "tick": 110,
+          "seq": 1,
+          "attempt": 4
+        },
+        {
+          "dir": "DL",
+          "tick": 120,
+          "seq": 1,
+          "attempt": 4
+        },
+        {
+          "dir": "UL",
+          "tick": 130,
+          "seq": 2,
+          "attempt": 4
+        },
+        {
+          "dir": "DL",
+          "tick": 154,
+          "seq": 0,
+          "attempt": 5
+        },
+        {
+          "dir": "DL",
+          "tick": 184,
+          "seq": 1,
+          "attempt": 5
+        },
+        {
+          "dir": "UL",
+          "tick": 194,
+          "seq": 2,
+          "attempt": 5
+        }
+      ]
+    }
+  },
+  {
+    "name": "burst_mild",
+    "status": "PASS",
+    "stats": {
+      "config": {
+        "tick_hz": 20,
+        "tick_ms": 50,
+        "total_ticks": 200,
+        "channel": "Burst-Mild (bad=60%, \u2192bad=8%, \u2192good=40%)",
+        "seed": 42
+      },
+      "ul_total": 200,
+      "dl_total": 200,
+      "ul_lost": 24,
+      "dl_lost": 28,
+      "ul_loss_pct": 12.0,
+      "dl_loss_pct": 14.0,
+      "ul_reliable_delivered": 3,
+      "ul_reliable_failed": 0,
+      "dl_reliable_delivered": 2,
+      "dl_reliable_failed": 0,
+      "total_retx": 0,
+      "standalone_acks": 0,
+      "ul_link_quality": 94,
+      "dl_link_quality": 94,
+      "ul_rto_final": 2,
+      "dl_rto_final": 6,
+      "ul_rtt_est": 1.0,
+      "dl_rtt_est": 1.88,
+      "ul_avg_latency": 1.0,
+      "dl_avg_latency": 1.5,
+      "ul_max_latency": 1,
+      "dl_max_latency": 2,
+      "ul_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "SET_WAYPOINT",
+          "latency": 1
+        },
+        {
+          "seq": 1,
+          "label": "ARM",
+          "latency": 1
+        },
+        {
+          "seq": 2,
+          "label": "RTH",
+          "latency": 1
+        }
+      ],
+      "dl_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "LOW_BATTERY",
+          "latency": 2
+        },
+        {
+          "seq": 1,
+          "label": "GPS_DEGRADED",
+          "latency": 1
+        }
+      ],
+      "ul_failed_detail": [],
+      "dl_failed_detail": [],
+      "retx_events": []
+    }
+  },
+  {
+    "name": "burst_severe",
+    "status": "PASS",
+    "stats": {
+      "config": {
+        "tick_hz": 20,
+        "tick_ms": 50,
+        "total_ticks": 300,
+        "channel": "Burst-Severe (bad=90%, \u2192bad=15%, \u2192good=10%)",
+        "seed": 42
+      },
+      "ul_total": 300,
+      "dl_total": 300,
+      "ul_lost": 160,
+      "dl_lost": 153,
+      "ul_loss_pct": 53.3,
+      "dl_loss_pct": 51.0,
+      "ul_reliable_delivered": 3,
+      "ul_reliable_failed": 0,
+      "dl_reliable_delivered": 2,
+      "dl_reliable_failed": 0,
+      "total_retx": 6,
+      "standalone_acks": 0,
+      "ul_link_quality": 46,
+      "dl_link_quality": 48,
+      "ul_rto_final": 6,
+      "dl_rto_final": 6,
+      "ul_rtt_est": 2,
+      "dl_rtt_est": 2,
+      "ul_avg_latency": 10.33,
+      "dl_avg_latency": 22.5,
+      "ul_max_latency": 24,
+      "dl_max_latency": 43,
+      "ul_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "SET_WAYPOINT",
+          "latency": 5
+        },
+        {
+          "seq": 1,
+          "label": "ARM",
+          "latency": 2
+        },
+        {
+          "seq": 2,
+          "label": "RTH",
+          "latency": 24
+        }
+      ],
+      "dl_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "LOW_BATTERY",
+          "latency": 2
+        },
+        {
+          "seq": 1,
+          "label": "GPS_DEGRADED",
+          "latency": 43
+        }
+      ],
+      "ul_failed_detail": [],
+      "dl_failed_detail": [],
+      "retx_events": [
+        {
+          "dir": "UL",
+          "tick": 24,
+          "seq": 0,
+          "attempt": 1
+        },
+        {
+          "dir": "DL",
+          "tick": 66,
+          "seq": 1,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 76,
+          "seq": 2,
+          "attempt": 1
+        },
+        {
+          "dir": "DL",
+          "tick": 78,
+          "seq": 1,
+          "attempt": 2
+        },
+        {
+          "dir": "UL",
+          "tick": 88,
+          "seq": 2,
+          "attempt": 2
+        },
+        {
+          "dir": "DL",
+          "tick": 102,
+          "seq": 1,
+          "attempt": 3
+        }
+      ]
+    }
+  },
+  {
+    "name": "asym_ul_clean_dl_lossy",
+    "status": "PASS",
+    "stats": {
+      "config": {
+        "tick_hz": 20,
+        "tick_ms": 50,
+        "total_ticks": 200,
+        "channel": "Asymmetric UL=5% DL=40%",
+        "seed": 42
+      },
+      "ul_total": 200,
+      "dl_total": 200,
+      "ul_lost": 9,
+      "dl_lost": 82,
+      "ul_loss_pct": 4.5,
+      "dl_loss_pct": 41.0,
+      "ul_reliable_delivered": 3,
+      "ul_reliable_failed": 0,
+      "dl_reliable_delivered": 2,
+      "dl_reliable_failed": 0,
+      "total_retx": 2,
+      "standalone_acks": 0,
+      "ul_link_quality": 92,
+      "dl_link_quality": 62,
+      "ul_rto_final": 3,
+      "dl_rto_final": 2,
+      "ul_rtt_est": 1,
+      "dl_rtt_est": 1.0,
+      "ul_avg_latency": 4.67,
+      "dl_avg_latency": 1.0,
+      "ul_max_latency": 7,
+      "dl_max_latency": 1,
+      "ul_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "SET_WAYPOINT",
+          "latency": 6
+        },
+        {
+          "seq": 1,
+          "label": "ARM",
+          "latency": 7
+        },
+        {
+          "seq": 2,
+          "label": "RTH",
+          "latency": 1
+        }
+      ],
+      "dl_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "LOW_BATTERY",
+          "latency": 1
+        },
+        {
+          "seq": 1,
+          "label": "GPS_DEGRADED",
+          "latency": 1
+        }
+      ],
+      "ul_failed_detail": [],
+      "dl_failed_detail": [],
+      "retx_events": [
+        {
+          "dir": "UL",
+          "tick": 24,
+          "seq": 0,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 54,
+          "seq": 1,
+          "attempt": 1
+        }
+      ]
+    }
+  },
+  {
+    "name": "asym_ul_lossy_dl_clean",
+    "status": "PASS",
+    "stats": {
+      "config": {
+        "tick_hz": 20,
+        "tick_ms": 50,
+        "total_ticks": 200,
+        "channel": "Asymmetric UL=40% DL=5%",
+        "seed": 42
+      },
+      "ul_total": 200,
+      "dl_total": 200,
+      "ul_lost": 81,
+      "dl_lost": 8,
+      "ul_loss_pct": 40.5,
+      "dl_loss_pct": 4.0,
+      "ul_reliable_delivered": 3,
+      "ul_reliable_failed": 0,
+      "dl_reliable_delivered": 2,
+      "dl_reliable_failed": 0,
+      "total_retx": 2,
+      "standalone_acks": 0,
+      "ul_link_quality": 62,
+      "dl_link_quality": 100,
+      "ul_rto_final": 2,
+      "dl_rto_final": 2,
+      "ul_rtt_est": 1.0,
+      "dl_rtt_est": 1.0,
+      "ul_avg_latency": 4.0,
+      "dl_avg_latency": 1.0,
+      "ul_max_latency": 10,
+      "dl_max_latency": 1,
+      "ul_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "SET_WAYPOINT",
+          "latency": 1
+        },
+        {
+          "seq": 1,
+          "label": "ARM",
+          "latency": 10
+        },
+        {
+          "seq": 2,
+          "label": "RTH",
+          "latency": 1
+        }
+      ],
+      "dl_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "LOW_BATTERY",
+          "latency": 1
+        },
+        {
+          "seq": 1,
+          "label": "GPS_DEGRADED",
+          "latency": 1
+        }
+      ],
+      "ul_failed_detail": [],
+      "dl_failed_detail": [],
+      "retx_events": [
+        {
+          "dir": "UL",
+          "tick": 53,
+          "seq": 1,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 59,
+          "seq": 1,
+          "attempt": 2
+        }
+      ]
+    }
+  },
+  {
+    "name": "blackout_both_30ticks",
+    "status": "PASS",
+    "stats": {
+      "config": {
+        "tick_hz": 20,
+        "tick_ms": 50,
+        "total_ticks": 200,
+        "channel": "Blackout both t=[40,70] (1.5s)",
+        "seed": 42
+      },
+      "ul_total": 200,
+      "dl_total": 200,
+      "ul_lost": 36,
+      "dl_lost": 38,
+      "ul_loss_pct": 18.0,
+      "dl_loss_pct": 19.0,
+      "ul_reliable_delivered": 3,
+      "ul_reliable_failed": 0,
+      "dl_reliable_delivered": 2,
+      "dl_reliable_failed": 0,
+      "total_retx": 6,
+      "standalone_acks": 0,
+      "ul_link_quality": 96,
+      "dl_link_quality": 96,
+      "ul_rto_final": 2,
+      "dl_rto_final": 3,
+      "ul_rtt_est": 1.0,
+      "dl_rtt_est": 1,
+      "ul_avg_latency": 8.0,
+      "dl_avg_latency": 11.5,
+      "ul_max_latency": 22,
+      "dl_max_latency": 22,
+      "ul_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "SET_WAYPOINT",
+          "latency": 1
+        },
+        {
+          "seq": 2,
+          "label": "RTH",
+          "latency": 1
+        },
+        {
+          "seq": 1,
+          "label": "ARM",
+          "latency": 22
+        }
+      ],
+      "dl_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "LOW_BATTERY",
+          "latency": 1
+        },
+        {
+          "seq": 1,
+          "label": "GPS_DEGRADED",
+          "latency": 22
+        }
+      ],
+      "ul_failed_detail": [],
+      "dl_failed_detail": [],
+      "retx_events": [
+        {
+          "dir": "UL",
+          "tick": 53,
+          "seq": 1,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 59,
+          "seq": 1,
+          "attempt": 2
+        },
+        {
+          "dir": "DL",
+          "tick": 63,
+          "seq": 1,
+          "attempt": 1
+        },
+        {
+          "dir": "DL",
+          "tick": 69,
+          "seq": 1,
+          "attempt": 2
+        },
+        {
+          "dir": "UL",
+          "tick": 71,
+          "seq": 1,
+          "attempt": 3
+        },
+        {
+          "dir": "DL",
+          "tick": 81,
+          "seq": 1,
+          "attempt": 3
+        }
+      ]
+    }
+  },
+  {
+    "name": "blackout_ul_50ticks",
+    "status": "PASS",
+    "stats": {
+      "config": {
+        "tick_hz": 20,
+        "tick_ms": 50,
+        "total_ticks": 200,
+        "channel": "Blackout UL only t=[30,80] (2.5s)",
+        "seed": 42
+      },
+      "ul_total": 200,
+      "dl_total": 200,
+      "ul_lost": 56,
+      "dl_lost": 9,
+      "ul_loss_pct": 28.0,
+      "dl_loss_pct": 4.5,
+      "ul_reliable_delivered": 3,
+      "ul_reliable_failed": 0,
+      "dl_reliable_delivered": 2,
+      "dl_reliable_failed": 0,
+      "total_retx": 12,
+      "standalone_acks": 0,
+      "ul_link_quality": 94,
+      "dl_link_quality": 96,
+      "ul_rto_final": 3,
+      "dl_rto_final": 4,
+      "ul_rtt_est": 1,
+      "dl_rtt_est": null,
+      "ul_avg_latency": 23.0,
+      "dl_avg_latency": 35.0,
+      "ul_max_latency": 46,
+      "dl_max_latency": 50,
+      "ul_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "SET_WAYPOINT",
+          "latency": 1
+        },
+        {
+          "seq": 2,
+          "label": "RTH",
+          "latency": 22
+        },
+        {
+          "seq": 1,
+          "label": "ARM",
+          "latency": 46
+        }
+      ],
+      "dl_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "LOW_BATTERY",
+          "latency": 50
+        },
+        {
+          "seq": 1,
+          "label": "GPS_DEGRADED",
+          "latency": 20
+        }
+      ],
+      "ul_failed_detail": [],
+      "dl_failed_detail": [],
+      "retx_events": [
+        {
+          "dir": "DL",
+          "tick": 34,
+          "seq": 0,
+          "attempt": 1
+        },
+        {
+          "dir": "DL",
+          "tick": 42,
+          "seq": 0,
+          "attempt": 2
+        },
+        {
+          "dir": "UL",
+          "tick": 53,
+          "seq": 1,
+          "attempt": 1
+        },
+        {
+          "dir": "DL",
+          "tick": 58,
+          "seq": 0,
+          "attempt": 3
+        },
+        {
+          "dir": "UL",
+          "tick": 59,
+          "seq": 1,
+          "attempt": 2
+        },
+        {
+          "dir": "DL",
+          "tick": 64,
+          "seq": 1,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 71,
+          "seq": 1,
+          "attempt": 3
+        },
+        {
+          "dir": "DL",
+          "tick": 72,
+          "seq": 1,
+          "attempt": 2
+        },
+        {
+          "dir": "UL",
+          "tick": 73,
+          "seq": 2,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 79,
+          "seq": 2,
+          "attempt": 2
+        },
+        {
+          "dir": "UL",
+          "tick": 91,
+          "seq": 2,
+          "attempt": 3
+        },
+        {
+          "dir": "UL",
+          "tick": 95,
+          "seq": 1,
+          "attempt": 4
+        }
+      ]
+    }
+  },
+  {
+    "name": "stress_20_messages",
+    "status": "PASS",
+    "stats": {
+      "config": {
+        "tick_hz": 20,
+        "tick_ms": 50,
+        "total_ticks": 400,
+        "channel": "Uniform 15%",
+        "seed": 42
+      },
+      "ul_total": 400,
+      "dl_total": 400,
+      "ul_lost": 54,
+      "dl_lost": 56,
+      "ul_loss_pct": 13.5,
+      "dl_loss_pct": 14.0,
+      "ul_reliable_delivered": 20,
+      "ul_reliable_failed": 0,
+      "dl_reliable_delivered": 3,
+      "dl_reliable_failed": 0,
+      "total_retx": 5,
+      "standalone_acks": 0,
+      "ul_link_quality": 92,
+      "dl_link_quality": 88,
+      "ul_rto_final": 2,
+      "dl_rto_final": 2,
+      "ul_rtt_est": 1.03,
+      "dl_rtt_est": 1.0,
+      "ul_avg_latency": 1.45,
+      "dl_avg_latency": 1.0,
+      "ul_max_latency": 3,
+      "dl_max_latency": 1,
+      "ul_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "SEQ_0",
+          "latency": 1
+        },
+        {
+          "seq": 1,
+          "label": "SEQ_1",
+          "latency": 1
+        },
+        {
+          "seq": 2,
+          "label": "SEQ_2",
+          "latency": 2
+        },
+        {
+          "seq": 4,
+          "label": "SEQ_4",
+          "latency": 1
+        },
+        {
+          "seq": 3,
+          "label": "SEQ_3",
+          "latency": 3
+        },
+        {
+          "seq": 5,
+          "label": "SEQ_5",
+          "latency": 1
+        },
+        {
+          "seq": 6,
+          "label": "SEQ_6",
+          "latency": 1
+        },
+        {
+          "seq": 7,
+          "label": "SEQ_7",
+          "latency": 1
+        },
+        {
+          "seq": 8,
+          "label": "SEQ_8",
+          "latency": 2
+        },
+        {
+          "seq": 9,
+          "label": "SEQ_9",
+          "latency": 1
+        },
+        {
+          "seq": 10,
+          "label": "SEQ_10",
+          "latency": 3
+        },
+        {
+          "seq": 11,
+          "label": "SEQ_11",
+          "latency": 3
+        },
+        {
+          "seq": 12,
+          "label": "SEQ_12",
+          "latency": 1
+        },
+        {
+          "seq": 13,
+          "label": "SEQ_13",
+          "latency": 1
+        },
+        {
+          "seq": 14,
+          "label": "SEQ_14",
+          "latency": 1
+        },
+        {
+          "seq": 15,
+          "label": "SEQ_15",
+          "latency": 1
+        },
+        {
+          "seq": 16,
+          "label": "SEQ_16",
+          "latency": 1
+        },
+        {
+          "seq": 17,
+          "label": "SEQ_17",
+          "latency": 1
+        },
+        {
+          "seq": 18,
+          "label": "SEQ_18",
+          "latency": 2
+        },
+        {
+          "seq": 19,
+          "label": "SEQ_19",
+          "latency": 1
+        }
+      ],
+      "dl_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "GEOFENCE",
+          "latency": 1
+        },
+        {
+          "seq": 1,
+          "label": "WIND",
+          "latency": 1
+        },
+        {
+          "seq": 2,
+          "label": "CRITICAL_BAT",
+          "latency": 1
+        }
+      ],
+      "ul_failed_detail": [],
+      "dl_failed_detail": [],
+      "retx_events": [
+        {
+          "dir": "UL",
+          "tick": 15,
+          "seq": 3,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 21,
+          "seq": 8,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 24,
+          "seq": 10,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 25,
+          "seq": 11,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 34,
+          "seq": 18,
+          "attempt": 1
+        }
+      ]
+    }
+  },
+  {
+    "name": "stress_high_loss_many_msg",
+    "status": "PASS",
+    "stats": {
+      "config": {
+        "tick_hz": 20,
+        "tick_ms": 50,
+        "total_ticks": 400,
+        "channel": "Uniform 40%",
+        "seed": 42
+      },
+      "ul_total": 400,
+      "dl_total": 400,
+      "ul_lost": 147,
+      "dl_lost": 163,
+      "ul_loss_pct": 36.8,
+      "dl_loss_pct": 40.8,
+      "ul_reliable_delivered": 20,
+      "ul_reliable_failed": 0,
+      "dl_reliable_delivered": 3,
+      "dl_reliable_failed": 0,
+      "total_retx": 22,
+      "standalone_acks": 0,
+      "ul_link_quality": 70,
+      "dl_link_quality": 66,
+      "ul_rto_final": 4,
+      "dl_rto_final": 2,
+      "ul_rtt_est": 1.49,
+      "dl_rtt_est": 1.0,
+      "ul_avg_latency": 15.6,
+      "dl_avg_latency": 2.0,
+      "ul_max_latency": 91,
+      "dl_max_latency": 4,
+      "ul_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "SEQ_0",
+          "latency": 4
+        },
+        {
+          "seq": 2,
+          "label": "SEQ_2",
+          "latency": 2
+        },
+        {
+          "seq": 1,
+          "label": "SEQ_1",
+          "latency": 5
+        },
+        {
+          "seq": 4,
+          "label": "SEQ_4",
+          "latency": 1
+        },
+        {
+          "seq": 5,
+          "label": "SEQ_5",
+          "latency": 1
+        },
+        {
+          "seq": 6,
+          "label": "SEQ_6",
+          "latency": 7
+        },
+        {
+          "seq": 7,
+          "label": "SEQ_7",
+          "latency": 6
+        },
+        {
+          "seq": 8,
+          "label": "SEQ_8",
+          "latency": 7
+        },
+        {
+          "seq": 9,
+          "label": "SEQ_9",
+          "latency": 19
+        },
+        {
+          "seq": 3,
+          "label": "SEQ_3",
+          "latency": 91
+        },
+        {
+          "seq": 10,
+          "label": "SEQ_10",
+          "latency": 81
+        },
+        {
+          "seq": 12,
+          "label": "SEQ_12",
+          "latency": 1
+        },
+        {
+          "seq": 13,
+          "label": "SEQ_13",
+          "latency": 1
+        },
+        {
+          "seq": 14,
+          "label": "SEQ_14",
+          "latency": 2
+        },
+        {
+          "seq": 16,
+          "label": "SEQ_16",
+          "latency": 1
+        },
+        {
+          "seq": 11,
+          "label": "SEQ_11",
+          "latency": 7
+        },
+        {
+          "seq": 18,
+          "label": "SEQ_18",
+          "latency": 1
+        },
+        {
+          "seq": 17,
+          "label": "SEQ_17",
+          "latency": 7
+        },
+        {
+          "seq": 19,
+          "label": "SEQ_19",
+          "latency": 5
+        },
+        {
+          "seq": 15,
+          "label": "SEQ_15",
+          "latency": 63
+        }
+      ],
+      "dl_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "GEOFENCE",
+          "latency": 1
+        },
+        {
+          "seq": 1,
+          "label": "WIND",
+          "latency": 1
+        },
+        {
+          "seq": 2,
+          "label": "CRITICAL_BAT",
+          "latency": 4
+        }
+      ],
+      "ul_failed_detail": [],
+      "dl_failed_detail": [],
+      "retx_events": [
+        {
+          "dir": "UL",
+          "tick": 14,
+          "seq": 0,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 15,
+          "seq": 1,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 17,
+          "seq": 3,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 25,
+          "seq": 6,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 26,
+          "seq": 7,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 27,
+          "seq": 8,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 28,
+          "seq": 9,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 29,
+          "seq": 3,
+          "attempt": 2
+        },
+        {
+          "dir": "UL",
+          "tick": 29,
+          "seq": 10,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 40,
+          "seq": 9,
+          "attempt": 2
+        },
+        {
+          "dir": "UL",
+          "tick": 42,
+          "seq": 10,
+          "attempt": 2
+        },
+        {
+          "dir": "UL",
+          "tick": 53,
+          "seq": 3,
+          "attempt": 3
+        },
+        {
+          "dir": "DL",
+          "tick": 57,
+          "seq": 2,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 66,
+          "seq": 10,
+          "attempt": 3
+        },
+        {
+          "dir": "UL",
+          "tick": 101,
+          "seq": 3,
+          "attempt": 4
+        },
+        {
+          "dir": "UL",
+          "tick": 111,
+          "seq": 11,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 114,
+          "seq": 15,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 116,
+          "seq": 17,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 119,
+          "seq": 19,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 122,
+          "seq": 15,
+          "attempt": 2
+        },
+        {
+          "dir": "UL",
+          "tick": 138,
+          "seq": 15,
+          "attempt": 3
+        },
+        {
+          "dir": "UL",
+          "tick": 170,
+          "seq": 15,
+          "attempt": 4
+        }
+      ]
+    }
+  },
+  {
+    "name": "uniform_30pct_seed1",
+    "status": "PASS",
+    "stats": {
+      "config": {
+        "tick_hz": 20,
+        "tick_ms": 50,
+        "total_ticks": 200,
+        "channel": "Uniform 30%",
+        "seed": 1
+      },
+      "ul_total": 200,
+      "dl_total": 200,
+      "ul_lost": 64,
+      "dl_lost": 64,
+      "ul_loss_pct": 32.0,
+      "dl_loss_pct": 32.0,
+      "ul_reliable_delivered": 3,
+      "ul_reliable_failed": 0,
+      "dl_reliable_delivered": 2,
+      "dl_reliable_failed": 0,
+      "total_retx": 2,
+      "standalone_acks": 0,
+      "ul_link_quality": 76,
+      "dl_link_quality": 62,
+      "ul_rto_final": 3,
+      "dl_rto_final": 2,
+      "ul_rtt_est": 1,
+      "dl_rtt_est": 1.0,
+      "ul_avg_latency": 3.0,
+      "dl_avg_latency": 1.0,
+      "ul_max_latency": 4,
+      "dl_max_latency": 1,
+      "ul_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "SET_WAYPOINT",
+          "latency": 1
+        },
+        {
+          "seq": 1,
+          "label": "ARM",
+          "latency": 4
+        },
+        {
+          "seq": 2,
+          "label": "RTH",
+          "latency": 4
+        }
+      ],
+      "dl_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "LOW_BATTERY",
+          "latency": 1
+        },
+        {
+          "seq": 1,
+          "label": "GPS_DEGRADED",
+          "latency": 1
+        }
+      ],
+      "ul_failed_detail": [],
+      "dl_failed_detail": [],
+      "retx_events": [
+        {
+          "dir": "UL",
+          "tick": 53,
+          "seq": 1,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 73,
+          "seq": 2,
+          "attempt": 1
+        }
+      ]
+    }
+  },
+  {
+    "name": "uniform_30pct_seed2",
+    "status": "PASS",
+    "stats": {
+      "config": {
+        "tick_hz": 20,
+        "tick_ms": 50,
+        "total_ticks": 200,
+        "channel": "Uniform 30%",
+        "seed": 2
+      },
+      "ul_total": 200,
+      "dl_total": 200,
+      "ul_lost": 56,
+      "dl_lost": 58,
+      "ul_loss_pct": 28.0,
+      "dl_loss_pct": 29.0,
+      "ul_reliable_delivered": 3,
+      "ul_reliable_failed": 0,
+      "dl_reliable_delivered": 2,
+      "dl_reliable_failed": 0,
+      "total_retx": 4,
+      "standalone_acks": 0,
+      "ul_link_quality": 76,
+      "dl_link_quality": 80,
+      "ul_rto_final": 3,
+      "dl_rto_final": 6,
+      "ul_rtt_est": 1,
+      "dl_rtt_est": 2.12,
+      "ul_avg_latency": 9.0,
+      "dl_avg_latency": 2.5,
+      "ul_max_latency": 23,
+      "dl_max_latency": 3,
+      "ul_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "SET_WAYPOINT",
+          "latency": 1
+        },
+        {
+          "seq": 1,
+          "label": "ARM",
+          "latency": 23
+        },
+        {
+          "seq": 2,
+          "label": "RTH",
+          "latency": 3
+        }
+      ],
+      "dl_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "LOW_BATTERY",
+          "latency": 2
+        },
+        {
+          "seq": 1,
+          "label": "GPS_DEGRADED",
+          "latency": 3
+        }
+      ],
+      "ul_failed_detail": [],
+      "dl_failed_detail": [],
+      "retx_events": [
+        {
+          "dir": "UL",
+          "tick": 53,
+          "seq": 1,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 59,
+          "seq": 1,
+          "attempt": 2
+        },
+        {
+          "dir": "UL",
+          "tick": 71,
+          "seq": 1,
+          "attempt": 3
+        },
+        {
+          "dir": "UL",
+          "tick": 73,
+          "seq": 2,
+          "attempt": 1
+        }
+      ]
+    }
+  },
+  {
+    "name": "uniform_30pct_seed3",
+    "status": "PASS",
+    "stats": {
+      "config": {
+        "tick_hz": 20,
+        "tick_ms": 50,
+        "total_ticks": 200,
+        "channel": "Uniform 30%",
+        "seed": 3
+      },
+      "ul_total": 200,
+      "dl_total": 200,
+      "ul_lost": 52,
+      "dl_lost": 57,
+      "ul_loss_pct": 26.0,
+      "dl_loss_pct": 28.5,
+      "ul_reliable_delivered": 3,
+      "ul_reliable_failed": 0,
+      "dl_reliable_delivered": 2,
+      "dl_reliable_failed": 0,
+      "total_retx": 1,
+      "standalone_acks": 0,
+      "ul_link_quality": 66,
+      "dl_link_quality": 72,
+      "ul_rto_final": 2,
+      "dl_rto_final": 3,
+      "ul_rtt_est": 1.0,
+      "dl_rtt_est": 1,
+      "ul_avg_latency": 1.0,
+      "dl_avg_latency": 3.0,
+      "ul_max_latency": 1,
+      "dl_max_latency": 5,
+      "ul_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "SET_WAYPOINT",
+          "latency": 1
+        },
+        {
+          "seq": 1,
+          "label": "ARM",
+          "latency": 1
+        },
+        {
+          "seq": 2,
+          "label": "RTH",
+          "latency": 1
+        }
+      ],
+      "dl_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "LOW_BATTERY",
+          "latency": 5
+        },
+        {
+          "seq": 1,
+          "label": "GPS_DEGRADED",
+          "latency": 1
+        }
+      ],
+      "ul_failed_detail": [],
+      "dl_failed_detail": [],
+      "retx_events": [
+        {
+          "dir": "DL",
+          "tick": 34,
+          "seq": 0,
+          "attempt": 1
+        }
+      ]
+    }
+  },
+  {
+    "name": "uniform_30pct_seed4",
+    "status": "PASS",
+    "stats": {
+      "config": {
+        "tick_hz": 20,
+        "tick_ms": 50,
+        "total_ticks": 200,
+        "channel": "Uniform 30%",
+        "seed": 4
+      },
+      "ul_total": 200,
+      "dl_total": 200,
+      "ul_lost": 59,
+      "dl_lost": 65,
+      "ul_loss_pct": 29.5,
+      "dl_loss_pct": 32.5,
+      "ul_reliable_delivered": 3,
+      "ul_reliable_failed": 0,
+      "dl_reliable_delivered": 2,
+      "dl_reliable_failed": 0,
+      "total_retx": 3,
+      "standalone_acks": 0,
+      "ul_link_quality": 68,
+      "dl_link_quality": 72,
+      "ul_rto_final": 2,
+      "dl_rto_final": 3,
+      "ul_rtt_est": 1.0,
+      "dl_rtt_est": 1,
+      "ul_avg_latency": 4.0,
+      "dl_avg_latency": 2.0,
+      "ul_max_latency": 10,
+      "dl_max_latency": 3,
+      "ul_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "SET_WAYPOINT",
+          "latency": 1
+        },
+        {
+          "seq": 1,
+          "label": "ARM",
+          "latency": 10
+        },
+        {
+          "seq": 2,
+          "label": "RTH",
+          "latency": 1
+        }
+      ],
+      "dl_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "LOW_BATTERY",
+          "latency": 1
+        },
+        {
+          "seq": 1,
+          "label": "GPS_DEGRADED",
+          "latency": 3
+        }
+      ],
+      "ul_failed_detail": [],
+      "dl_failed_detail": [],
+      "retx_events": [
+        {
+          "dir": "UL",
+          "tick": 53,
+          "seq": 1,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 59,
+          "seq": 1,
+          "attempt": 2
+        },
+        {
+          "dir": "DL",
+          "tick": 63,
+          "seq": 1,
+          "attempt": 1
+        }
+      ]
+    }
+  },
+  {
+    "name": "uniform_30pct_seed5",
+    "status": "PASS",
+    "stats": {
+      "config": {
+        "tick_hz": 20,
+        "tick_ms": 50,
+        "total_ticks": 200,
+        "channel": "Uniform 30%",
+        "seed": 5
+      },
+      "ul_total": 200,
+      "dl_total": 200,
+      "ul_lost": 64,
+      "dl_lost": 54,
+      "ul_loss_pct": 32.0,
+      "dl_loss_pct": 27.0,
+      "ul_reliable_delivered": 3,
+      "ul_reliable_failed": 0,
+      "dl_reliable_delivered": 2,
+      "dl_reliable_failed": 0,
+      "total_retx": 2,
+      "standalone_acks": 0,
+      "ul_link_quality": 62,
+      "dl_link_quality": 72,
+      "ul_rto_final": 8,
+      "dl_rto_final": 5,
+      "ul_rtt_est": 2.88,
+      "dl_rtt_est": 2.0,
+      "ul_avg_latency": 10.0,
+      "dl_avg_latency": 2.0,
+      "ul_max_latency": 25,
+      "dl_max_latency": 2,
+      "ul_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "SET_WAYPOINT",
+          "latency": 3
+        },
+        {
+          "seq": 1,
+          "label": "ARM",
+          "latency": 2
+        },
+        {
+          "seq": 2,
+          "label": "RTH",
+          "latency": 25
+        }
+      ],
+      "dl_delivered_detail": [
+        {
+          "seq": 0,
+          "label": "LOW_BATTERY",
+          "latency": 2
+        },
+        {
+          "seq": 1,
+          "label": "GPS_DEGRADED",
+          "latency": 2
+        }
+      ],
+      "ul_failed_detail": [],
+      "dl_failed_detail": [],
+      "retx_events": [
+        {
+          "dir": "UL",
+          "tick": 78,
+          "seq": 2,
+          "attempt": 1
+        },
+        {
+          "dir": "UL",
+          "tick": 94,
+          "seq": 2,
+          "attempt": 2
+        }
+      ]
+    }
+  }
+]

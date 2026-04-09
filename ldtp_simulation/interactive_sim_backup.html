@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>LDTP Interactive Simulation</title>
+<style>
+:root{--bg:#0f1923;--panel:#1a2332;--border:#2a3a4e;--accent:#00b4d8;--ok:#2ecc71;
+--warn:#f39c12;--fail:#e74c3c;--rel:#3498db;--unrel:#27ae60;--txt:#d4dde8;--dim:#6b7d8e;
+--hi:#00e5ff;--retx:#e056a0;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--txt);font-family:'Inter','SF Pro Display',-apple-system,sans-serif;
+font-size:13px;overflow:hidden;height:100vh;display:flex;flex-direction:column;}
+/* Layout */
+.app{display:flex;flex:1;overflow:hidden;}
+.sidebar{width:300px;min-width:300px;background:var(--panel);border-right:1px solid var(--border);
+display:flex;flex-direction:column;overflow-y:auto;}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.canvas-area{flex:none;height:50vh;position:relative;min-height:140px;}
+.canvas-area canvas{display:block;width:100%;height:100%;}
+.splitter{height:6px;min-height:6px;cursor:row-resize;background:var(--border);position:relative;
+display:flex;align-items:center;justify-content:center;user-select:none;flex-shrink:0;}
+.splitter::after{content:'';width:40px;height:2px;border-radius:1px;background:var(--dim);}
+.splitter:hover,.splitter.dragging{background:var(--accent);}
+.splitter:hover::after,.splitter.dragging::after{background:#000;}
+.bottom-panel{flex:1;min-height:120px;background:var(--panel);border-top:none;
+display:flex;flex-direction:column;overflow:hidden;}
+/* Sidebar */
+.sidebar-header{padding:16px;background:linear-gradient(135deg,#0d2137,#1a3a5c);border-bottom:1px solid var(--border);}
+.sidebar-header h1{font-size:16px;color:var(--hi);font-weight:700;letter-spacing:0.5px;}
+.sidebar-header p{font-size:11px;color:var(--dim);margin-top:2px;}
+.section{padding:12px 16px;border-bottom:1px solid var(--border);}
+.section-title{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);margin-bottom:10px;font-weight:600;}
+.control-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.control-row label{font-size:12px;color:var(--txt);flex-shrink:0;}
+.control-row .val{font-size:12px;color:var(--accent);font-weight:600;min-width:50px;text-align:right;}
+input[type=range]{-webkit-appearance:none;width:120px;height:4px;background:var(--border);border-radius:2px;outline:none;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;background:var(--accent);border-radius:50%;cursor:pointer;}
+select,input[type=number]{background:var(--bg);color:var(--txt);border:1px solid var(--border);border-radius:4px;
+padding:4px 8px;font-size:12px;outline:none;width:120px;}
+select:focus,input[type=number]:focus{border-color:var(--accent);}
+/* Presets */
+.presets{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;}
+.preset-btn{padding:4px 10px;border-radius:4px;border:1px solid var(--border);background:var(--bg);
+color:var(--txt);font-size:11px;cursor:pointer;transition:all .15s;}
+.preset-btn:hover{border-color:var(--accent);color:var(--accent);}
+.preset-btn.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:600;}
+/* Messages schedule */
+.msg-list{max-height:min(160px,20vh);overflow-y:auto;padding-right:12px;}
+.msg-item{display:flex;align-items:center;gap:6px;padding:3px 0;font-size:11px;}
+.msg-item .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.msg-item .dot.ul{background:var(--accent);}
+.msg-item .dot.dl{background:var(--ok);}
+.msg-item .remove{color:var(--fail);cursor:pointer;margin-left:auto;font-size:14px;opacity:0.6;}
+.msg-item .remove:hover{opacity:1;}
+.msg-add{margin-top:10px;border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.msg-add-tabs{display:flex;background:var(--bg);}
+.msg-add-tab{flex:1;padding:6px 0;text-align:center;font-size:11px;font-weight:600;
+cursor:pointer;color:var(--dim);border-bottom:2px solid transparent;transition:all .15s;}
+.msg-add-tab:hover{color:var(--txt);}
+.msg-add-tab.active{color:var(--accent);border-bottom-color:var(--accent);background:var(--panel);}
+.msg-add-tab.danger{color:var(--fail);}
+.msg-add-tab.danger:hover{color:var(--fail);border-bottom-color:var(--fail);}
+.msg-add-body{padding:10px;display:none;}
+.msg-add-body.active{display:block;}
+.msg-add-body .field{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.msg-add-body .field:last-child{margin-bottom:0;}
+.msg-add-body .field label{font-size:11px;color:var(--dim);flex-shrink:0;}
+.msg-add-body .field input,.msg-add-body .field select{background:var(--bg);color:var(--txt);
+border:1px solid var(--border);border-radius:4px;padding:5px 8px;font-size:12px;outline:none;width:140px;}
+.msg-add-body .field input:focus,.msg-add-body .field select:focus{border-color:var(--accent);}
+.msg-add-btn{width:100%;padding:7px 0;border:none;border-radius:4px;background:var(--accent);
+color:#000;font-size:12px;font-weight:600;cursor:pointer;margin-top:8px;transition:background .15s;}
+.msg-add-btn:hover{background:var(--hi);}
+.msg-add-btn.danger{background:transparent;border:1px solid var(--fail);color:var(--fail);}
+.msg-add-btn.danger:hover{background:var(--fail);color:#fff;}
+/* Transport controls */
+.transport{padding:12px 16px;border-top:1px solid var(--border);background:var(--bg);
+flex-shrink:0;position:sticky;bottom:0;z-index:5;}
+.transport-btns{display:flex;gap:6px;margin-bottom:10px;}
+.btn{padding:8px 16px;border-radius:6px;border:none;cursor:pointer;font-size:12px;font-weight:600;
+transition:all .15s;}
+.btn-primary{background:var(--accent);color:#000;flex:1;}
+.btn-primary:hover{background:var(--hi);}
+.btn-primary:disabled{opacity:0.4;cursor:default;}
+.btn-secondary{background:var(--border);color:var(--txt);flex:1;}
+.btn-secondary:hover{background:#3a4a5e;}
+.speed-row{display:flex;align-items:center;gap:8px;}
+.speed-row label{font-size:11px;color:var(--dim);}
+.speed-btns{display:flex;gap:2px;}
+.speed-btn{padding:3px 8px;border-radius:3px;border:1px solid var(--border);background:transparent;
+color:var(--dim);font-size:11px;cursor:pointer;}
+.speed-btn.active{background:var(--accent);color:#000;border-color:var(--accent);}
+/* Progress bar */
+.progress-bar{width:100%;height:3px;background:var(--border);border-radius:2px;margin-top:8px;cursor:pointer;}
+.progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 0.05s linear;}
+/* Bottom tabs */
+.tab-bar{display:flex;border-bottom:1px solid var(--border);background:var(--bg);}
+.tab{padding:8px 16px;font-size:12px;cursor:pointer;border-bottom:2px solid transparent;color:var(--dim);transition:all .15s;}
+.tab:hover{color:var(--txt);}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.tab-content{flex:1;overflow-y:auto;padding:8px 12px;font-family:'SF Mono',Consolas,monospace;font-size:12px;}
+.tab-pane{display:none;}
+.tab-pane.active{display:block;}
+/* Log */
+.log-filters{display:flex;gap:4px;padding:6px 0;border-bottom:1px solid var(--border);margin-bottom:6px;position:sticky;top:0;background:var(--panel);z-index:1;}
+.log-filter-btn{padding:3px 10px;border-radius:4px;border:1px solid var(--border);background:var(--bg);
+color:var(--dim);font-size:11px;cursor:pointer;font-family:inherit;}
+.log-filter-btn:hover{border-color:var(--accent);color:var(--txt);}
+.log-filter-btn.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:600;}
+.log-entry{padding:2px 0;border-bottom:1px solid rgba(42,58,78,0.3);}
+.log-entry .tick{color:var(--dim);display:inline-block;width:45px;}
+.log-entry.lost{color:var(--fail);}
+.log-entry.ok{color:var(--ok);}
+.log-entry.rel{color:var(--rel);}
+.log-entry.retx{color:var(--retx);}
+.log-entry.ack{color:var(--warn);}
+.log-entry.app{color:var(--hi);}
+/* Stats grid */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;padding:8px;}
+.stat-card{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px;text-align:center;}
+.stat-card .v{font-size:22px;font-weight:700;color:var(--accent);}
+.stat-card .v.warn{color:var(--warn);}
+.stat-card .v.fail{color:var(--fail);}
+.stat-card .l{font-size:10px;color:var(--dim);margin-top:2px;}
+/* Message tracker */
+.msg-tracker{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px;padding:8px;}
+.msg-track{background:var(--bg);border-left:3px solid var(--dim);border-radius:0 6px 6px 0;padding:8px 10px;}
+.msg-track.pending{border-left-color:var(--dim);}
+.msg-track.inflight{border-left-color:var(--warn);animation:pulse 1s infinite;}
+.msg-track.delivered{border-left-color:var(--ok);}
+.msg-track.failed{border-left-color:var(--fail);}
+.msg-track.timeout{border-left-color:var(--warn);}
+.msg-track .dir{font-size:10px;color:var(--dim);}
+.msg-track .name{font-size:13px;font-weight:600;margin:2px 0;}
+.msg-track .info{font-size:11px;color:var(--dim);}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.6;}}
+/* Overlay */
+.overlay{position:absolute;top:10px;left:10px;right:10px;display:flex;gap:8px;flex-wrap:wrap;
+pointer-events:none;z-index:10;}
+.overlay-card{background:rgba(26,35,50,0.9);border:1px solid var(--border);border-radius:8px;
+padding:10px 16px;font-size:12px;line-height:1.4;backdrop-filter:blur(8px);letter-spacing:0.3px;min-width:100px;}
+.overlay-card .card-label{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;}
+.overlay-card .card-row{display:flex;align-items:baseline;gap:8px;margin-top:2px;}
+.overlay-card .big{font-size:26px;font-weight:700;color:var(--hi);}
+.overlay-card .val-main{font-size:20px;font-weight:700;color:var(--hi);}
+.overlay-card .val-sub{font-size:14px;font-weight:600;}
+</style>
+</head>
+<body>
+<div class="app">
+<!-- Sidebar -->
+<div class="sidebar">
+  <div class="sidebar-header">
+    <h1>LDTP Simulation</h1>
+    <p>LoRa Dual-Channel Transport Protocol</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Channel</div>
+    <div class="presets" id="presets"></div>
+    <div class="control-row" style="margin-top:8px"><label>Model</label>
+      <select id="ch-model"><option value="uniform">Uniform</option><option value="burst">Burst (Gilbert)</option>
+      <option value="asymmetric">Asymmetric</option><option value="blackout">Blackout</option></select></div>
+    <div class="control-row"><label id="loss-label">Loss Rate</label><input type="range" id="loss" min="0" max="95" value="20"><span class="val" id="loss-val">20%</span></div>
+    <div id="burst-params" style="display:none">
+      <div class="control-row"><label>Bad State Loss</label><input type="range" id="burst-bad" min="30" max="99" value="80"><span class="val" id="burst-bad-val">80%</span></div>
+      <div class="control-row"><label>→Bad prob</label><input type="range" id="burst-to-bad" min="1" max="50" value="10"><span class="val" id="burst-to-bad-val">10%</span></div>
+      <div class="control-row"><label>→Good prob</label><input type="range" id="burst-to-good" min="5" max="80" value="30"><span class="val" id="burst-to-good-val">30%</span></div>
+    </div>
+    <div id="asym-params" style="display:none">
+      <div class="control-row"><label>DL Loss</label><input type="range" id="dl-loss" min="0" max="95" value="40"><span class="val" id="dl-loss-val">40%</span></div>
+    </div>
+    <div id="blackout-params" style="display:none">
+      <div class="control-row"><label>Start tick</label><input type="number" id="bo-start" value="40" min="0" max="500" style="width:60px"></div>
+      <div class="control-row"><label>End tick</label><input type="number" id="bo-end" value="70" min="0" max="500" style="width:60px"></div>
+      <div class="control-row"><label>Direction</label><select id="bo-dir" style="width:80px"><option value="both">Both</option><option value="ul">UL only</option><option value="dl">DL only</option></select></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Simulation</div>
+    <div class="control-row"><label>Tick Rate</label><input type="number" id="tickhz" value="20" min="1" max="100" style="width:70px"><span class="val">Hz</span></div>
+    <div class="control-row"><label>Duration</label><input type="number" id="sim-sec" value="30" min="1" max="300" style="width:70px"><span class="val" id="sim-sec-unit">s</span>
+      <span style="color:var(--dim);font-size:11px;margin-left:4px">= <span id="sim-ticks-display">600</span> ticks</span></div>
+    <input type="hidden" id="ticks" value="600">
+    <div class="control-row"><label>Seed</label><input type="number" id="seed" value="42" min="0" max="9999" style="width:70px"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Reliable Traffic</div>
+    <div class="msg-list" id="msg-list"></div>
+    <div class="msg-add" id="msg-add">
+      <div class="msg-add-tabs">
+        <div class="msg-add-tab active" onclick="switchMsgTab(0,this)">+ Single</div>
+        <div class="msg-add-tab" onclick="switchMsgTab(1,this)">+ Burst</div>
+        <div class="msg-add-tab danger" onclick="clearMsgs()">Clear</div>
+      </div>
+      <div class="msg-add-body active" id="msg-tab-0">
+        <div class="field"><label>Direction</label>
+          <select id="add-dir"><option value="ul">UL (GCS→UAV)</option><option value="dl">DL (UAV→GCS)</option></select></div>
+        <div class="field"><label>Tick</label>
+          <input type="number" id="add-tick" value="20" min="0"></div>
+        <div class="field"><label>Label</label>
+          <input type="text" id="add-label" value="CMD"></div>
+        <button class="msg-add-btn" onclick="addMsg()">Add Message</button>
+      </div>
+      <div class="msg-add-body" id="msg-tab-1">
+        <div class="field"><label>Direction</label>
+          <select id="burst-dir"><option value="ul">UL (GCS→UAV)</option><option value="dl">DL (UAV→GCS)</option></select></div>
+        <div class="field"><label>Start Tick</label>
+          <input type="number" id="burst-start" value="40" min="0"></div>
+        <div class="field"><label>Count</label>
+          <input type="number" id="burst-count" value="5" min="1" max="50"></div>
+        <div class="field"><label>Prefix</label>
+          <input type="text" id="burst-label" value="WPT"></div>
+        <button class="msg-add-btn" onclick="addBurst()">Add Burst</button>
+      </div>
+    </div>
+    <div class="section-title" style="margin-top:12px">Unreliable Traffic</div>
+    <div class="control-row"><label style="color:var(--accent)">UL: RC</label>
+      <select id="ul-unrel-interval" style="width:100px">
+        <option value="1">Every tick</option>
+        <option value="2">Every 2 ticks</option>
+        <option value="5">Every 5 ticks</option>
+        <option value="10">Every 10 ticks</option>
+        <option value="0">Off</option>
+      </select></div>
+    <div class="control-row"><label style="color:var(--ok)">DL: Telemetry</label>
+      <select id="dl-unrel-interval" style="width:100px">
+        <option value="1">Every tick</option>
+        <option value="2">Every 2 ticks</option>
+        <option value="5">Every 5 ticks</option>
+        <option value="10">Every 10 ticks</option>
+        <option value="0">Off</option>
+      </select></div>
+    <div style="margin-top:4px;font-size:11px;color:var(--dim)">Telem: ATT → GPS → BAT | ACK piggybacks on unreliable</div>
+  </div>
+
+  <div class="transport">
+    <div class="transport-btns">
+      <button class="btn btn-primary" id="btn-run" onclick="runSim()">Run Simulation</button>
+      <button class="btn btn-secondary" id="btn-pause" onclick="togglePause()" disabled>Pause</button>
+      <button class="btn btn-secondary" id="btn-reset" onclick="resetSim()">Reset</button>
+    </div>
+    <div class="speed-row">
+      <label>Speed:</label>
+      <div class="speed-btns" id="speed-btns"></div>
+    </div>
+    <div class="progress-bar" id="progress-bar" onclick="seekProgress(event)">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Main -->
+<div class="main">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="overlay">
+      <div class="overlay-card" id="ov-tick">
+        <div class="card-label">Tick</div>
+        <div class="big" id="ov-tick-val">—</div>
+      </div>
+      <div class="overlay-card" id="ov-ul">
+        <div class="card-label">Uplink (UL)</div>
+        <div class="card-row"><span class="val-main" id="ov-ul-sent">0</span><span class="val-sub">sent</span></div>
+        <div class="card-row"><span class="val-main" id="ov-ul-lost" style="color:var(--fail)">0</span><span class="val-sub">lost</span></div>
+      </div>
+      <div class="overlay-card" id="ov-dl">
+        <div class="card-label">Downlink (DL)</div>
+        <div class="card-row"><span class="val-main" id="ov-dl-sent">0</span><span class="val-sub">sent</span></div>
+        <div class="card-row"><span class="val-main" id="ov-dl-lost" style="color:var(--fail)">0</span><span class="val-sub">lost</span></div>
+      </div>
+      <div class="overlay-card" id="ov-rel">
+        <div class="card-label">Reliable</div>
+        <div class="card-row"><span class="val-main" id="ov-rel-d" style="color:var(--ok)">0</span><span class="val-sub"> / <span id="ov-rel-t">0</span></span></div>
+      </div>
+      <div class="overlay-card" id="ov-lq">
+        <div class="card-label">Link Quality</div>
+        <div class="card-row"><span class="val-sub" style="color:var(--dim)">UL</span><span class="val-main" id="ov-lq-ul" style="color:var(--ok)">100%</span></div>
+        <div class="card-row"><span class="val-sub" style="color:var(--dim)">DL</span><span class="val-main" id="ov-lq-dl" style="color:var(--ok)">100%</span></div>
+      </div>
+      <div class="overlay-card" id="ov-rto">
+        <div class="card-label">RTO</div>
+        <div class="card-row"><span class="val-sub" style="color:var(--dim)">UL</span><span class="val-main" id="ov-rto-ul">4</span></div>
+        <div class="card-row"><span class="val-sub" style="color:var(--dim)">DL</span><span class="val-main" id="ov-rto-dl">4</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="splitter" id="splitter"></div>
+  <div class="bottom-panel">
+    <div class="tab-bar" id="tab-bar"></div>
+    <div class="tab-content" id="tab-content"></div>
+  </div>
+</div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════
+// LDTP Protocol (JavaScript port)
+// ═══════════════════════════════════════════════════════════════════════
+const SEQ_MOD = 64, WINDOW_SIZE = 8, MAX_RETRIES = 5, RTO_TICKS = 4, RTO_MAX_EXP = 4;
+const RTO_MIN = 2, RTO_MAX = 100, ACK_DELAY_TICKS = 2;
+
+function buildFC(r,a,f,typ){ return (r<<7)|(a<<6)|(f<<5)|((typ&7)<<2); }
+function encACK(sid,cack,sack){ const w=((sid&7)<<13)|((cack&0x3F)<<7)|(sack&0x7F); return [w>>8,w&0xFF]; }
+function encSeq(seq,frag){ return ((seq&0x3F)<<2)|(frag&3); }
+
+function buildUnreliable(typeId, payload, ack){
+  const fc = buildFC(0, ack?1:0, 0, typeId);
+  let f = [fc]; if(ack) f.push(...encACK(...ack));
+  f.push(...payload); return new Uint8Array(f);
+}
+function buildReliable(sid, seq, frag, more, payload, ack){
+  const fc = buildFC(1, ack?1:0, more?1:0, sid);
+  let f = [fc]; if(ack) f.push(...encACK(...ack));
+  f.push(encSeq(seq,frag)); f.push(...payload); return new Uint8Array(f);
+}
+function buildAckOnly(ack){
+  const fc=buildFC(0,1,0,7);return new Uint8Array([fc,...encACK(...ack)]);
+}
+function decodeFrame(data){
+  if(!data||!data.length) return null;
+  const fc=data[0]; let off=1;
+  const r={reliable:(fc>>7)&1, ack_present:(fc>>6)&1, more_frag:(fc>>5)&1,
+           type_or_stream:(fc>>2)&7, version:fc&3, total_len:data.length};
+  if(r.ack_present){
+    if(data.length<off+2) return null;
+    const w=(data[off]<<8)|data[off+1];
+    r.ack_sid=(w>>13)&7; r.ack_cack=(w>>7)&0x3F; r.ack_sack=w&0x7F; off+=2;
+  }
+  if(r.reliable){ if(data.length<off+1) return null; const sc=data[off]; r.seq=(sc>>2)&0x3F; r.frag=sc&3; off++; }
+  r.header_bytes=off; r.payload=data.slice(off); return r;
+}
+function seqDist(a,b){ return ((a-b)%SEQ_MOD+SEQ_MOD)%SEQ_MOD; }
+
+class ReliableSender{
+  constructor(sid){this.sid=sid;this.nextSeq=0;this.baseSeq=0;this.entries={};
+    this.queue=[];this.delivered=[];this.failed=[];
+    // Adaptive RTO state (Jacobson/Karels)
+    this.rttEst=0;this.rttDev=0;this.rttInit=false;this.rto=RTO_TICKS;}
+  queueMessage(payload,label){this.queue.push({payload,label});}
+  hasWork(){return Object.keys(this.entries).length>0||this.queue.length>0;}
+  tick(now){
+    this._admit();const events=[];
+    for(const seq of Object.keys(this.entries).map(Number)){
+      const e=this.entries[seq];
+      if(e.sent&&!e.acked&&!e.needsRetx){
+        e.timer--;
+        if(e.timer<=0){
+          e.retxCount++;
+          if(e.retxCount>MAX_RETRIES){
+            events.push({event:'failed',seq,label:e.label});
+            this.failed.push({seq,label:e.label});
+            delete this.entries[seq]; this._advBase();
+          }else{
+            e.needsRetx=true;
+            events.push({event:'retx_timeout',seq,label:e.label,attempt:e.retxCount});
+          }
+        }
+      }
+    } return events;
+  }
+  getFrame(ackInfo,now){
+    this._admit();
+    for(const seq of this._iterWin()){
+      const e=this.entries[seq];
+      if(!e||e.acked)continue;
+      if(e.needsRetx) return this._tx(seq,e,ackInfo,now,true);
+    }
+    for(const seq of this._iterWin()){
+      const e=this.entries[seq];
+      if(!e||e.acked||e.sent)continue;
+      return this._tx(seq,e,ackInfo,now,false);
+    }
+    return [null,null];
+  }
+  processAck(sid,cack,sack,now){
+    if(sid!==this.sid)return[];
+    const events=[];
+    const ackEntry=(seq)=>{
+      const e=this.entries[seq];e.acked=true;
+      const lat=now-e.sentTick;
+      this.delivered.push({seq,label:e.label,latency:lat});
+      events.push({event:'delivered',seq,label:e.label,latency:lat});
+      // Adaptive RTO: Karn's algorithm — only sample non-retransmitted
+      if(e.retxCount===0&&e.sentTick>=0&&lat>0)this._updateRtt(lat);
+    };
+    let seq=this.baseSeq,g=0;
+    while(seq!==(cack+1)%SEQ_MOD&&g<SEQ_MOD){
+      if(this.entries[seq]&&!this.entries[seq].acked)ackEntry(seq);
+      seq=(seq+1)%SEQ_MOD;g++;
+    }
+    for(let i=0;i<7;i++){
+      const ss=(cack+1+i)%SEQ_MOD;
+      if(sack&(1<<(6-i))){
+        if(this.entries[ss]&&!this.entries[ss].acked)ackEntry(ss);
+      }
+    }
+    this._advBase();return events;
+  }
+  _updateRtt(sample){
+    if(!this.rttInit){this.rttEst=sample;this.rttDev=sample/2;this.rttInit=true;}
+    else{const err=sample-this.rttEst;this.rttEst=0.875*this.rttEst+0.125*sample;this.rttDev=0.75*this.rttDev+0.25*Math.abs(err);}
+    this.rto=Math.max(RTO_MIN,Math.min(RTO_MAX,Math.round(this.rttEst+4*this.rttDev)));
+  }
+  _admit(){
+    while(this.queue.length&&this._winCount()<WINDOW_SIZE){
+      const{payload,label}=this.queue.shift();
+      this.entries[this.nextSeq]={payload,label,frag:0,moreFrag:false,sent:false,acked:false,
+        retxCount:0,timer:0,needsRetx:false,sentTick:-1};
+      this.nextSeq=(this.nextSeq+1)%SEQ_MOD;
+    }
+  }
+  _tx(seq,e,ackInfo,now,isRetx){
+    e.needsRetx=false;e.sent=true;if(e.sentTick<0)e.sentTick=now;
+    e.timer=Math.min(RTO_MAX,this.rto*(2**Math.min(e.retxCount,RTO_MAX_EXP)));
+    const frame=buildReliable(this.sid,seq,e.frag,e.moreFrag,e.payload,ackInfo);
+    return [frame,{seq,label:e.label,isRetx,retxCount:e.retxCount,rto:this.rto}];
+  }
+  _winCount(){return seqDist(this.nextSeq,this.baseSeq);}
+  _iterWin(){const r=[];let s=this.baseSeq;for(let i=0;i<this._winCount();i++){r.push(s);s=(s+1)%SEQ_MOD;}return r;}
+  _advBase(){
+    while(this.entries[this.baseSeq]&&this.entries[this.baseSeq].acked){delete this.entries[this.baseSeq];this.baseSeq=(this.baseSeq+1)%SEQ_MOD;}
+    while(!this.entries[this.baseSeq]&&this.baseSeq!==this.nextSeq){this.baseSeq=(this.baseSeq+1)%SEQ_MOD;}
+  }
+}
+
+class ReliableReceiver{
+  constructor(sid){this.sid=sid;this.expected=0;this.buf={};this.deliveredList=[];this._hasData=false;
+    this._ackPendingSince=-1;this._lastAckSent=-1;}
+  receive(seq,frag,more,payload,now=0){
+    const dist=seqDist(seq,this.expected);
+    if(dist>=SEQ_MOD/2)return false;
+    if(this.buf[seq]!==undefined)return false;
+    this._hasData=true;this._ackPendingSince=now;
+    this.buf[seq]=payload;
+    while(this.buf[this.expected]!==undefined){
+      this.deliveredList.push(this.buf[this.expected]);
+      delete this.buf[this.expected];this.expected=(this.expected+1)%SEQ_MOD;
+    }
+    return true;
+  }
+  getAck(){
+    if(!this._hasData)return null;
+    const cack=(this.expected-1+SEQ_MOD)%SEQ_MOD;
+    let sack=0;for(let i=0;i<7;i++){if(this.buf[(this.expected+i)%SEQ_MOD]!==undefined)sack|=1<<(6-i);}
+    return [this.sid,cack,sack];
+  }
+  markAckSent(now=0){this._ackPendingSince=-1;this._lastAckSent=now;}
+  needsStandaloneAck(now){
+    if(!this._hasData||this._ackPendingSince<0)return false;
+    return(now-this._ackPendingSince)>=ACK_DELAY_TICKS;
+  }
+  popDelivered(){const o=this.deliveredList;this.deliveredList=[];return o;}
+}
+
+// Link Quality Monitor
+class LinkQualityMonitor{
+  constructor(winSize=50){this.winSize=winSize;this._hist=[];this.totalSent=0;this.totalLost=0;}
+  record(delivered){
+    this._hist.push(delivered);this.totalSent++;if(!delivered)this.totalLost++;
+    if(this._hist.length>this.winSize)this._hist.shift();
+  }
+  get quality(){return this._hist.length?this._hist.reduce((a,b)=>a+b,0)/this._hist.length:1;}
+  get qualityPct(){return Math.round(this.quality*100);}
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// Seeded Random
+// ═══════════════════════════════════════════════════════════════════════
+class Rand{
+  constructor(s){this.s=s%2147483647;if(this.s<=0)this.s+=2147483646;}
+  next(){this.s=this.s*16807%2147483647;return(this.s-1)/2147483646;}
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// Channel Models
+// ═══════════════════════════════════════════════════════════════════════
+class UniformCh{ constructor(r,rng){this.rate=r;this.rng=rng;this.name=`Uniform ${(r*100).toFixed(0)}%`;}
+  test(dir){return this.rng.next()>=this.rate;} }
+class AsymCh{ constructor(ul,dl,rng){this.ul=ul;this.dl=dl;this.rng=rng;this.name=`Asym UL=${(ul*100)|0}% DL=${(dl*100)|0}%`;}
+  test(dir){return this.rng.next()>=(dir==='ul'?this.ul:this.dl);} }
+class BurstCh{
+  constructor(pg,pb,tb,tg,rng,label){this.pg=pg;this.pb=pb;this.tb=tb;this.tg=tg;this.rng=rng;this.state='good';
+    this.name=label||`Burst`;}
+  test(dir){const p=this.state==='good'?this.pg:this.pb;const ok=this.rng.next()>=p;
+    if(this.state==='good'){if(this.rng.next()<this.tb)this.state='bad';}
+    else{if(this.rng.next()<this.tg)this.state='good';}return ok;}
+}
+class BlackoutCh{
+  constructor(base,s,e,d,rng){this.base=base;this.s=s;this.e=e;this.d=d;this.rng=rng;this.tick=0;
+    this.name=`Blackout t=[${s},${e}] ${d}`;}
+  setTick(t){this.tick=t;}
+  test(dir){if(this.tick>=this.s&&this.tick<this.e&&(this.d==='both'||this.d===dir))return false;
+    return this.rng.next()>=this.base;}
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// Simulation Engine
+// ═══════════════════════════════════════════════════════════════════════
+function makePayload(str){ return new Uint8Array([...str].map(c=>c.charCodeAt(0))); }
+function makeRC(tick){ const d=[];for(let i=0;i<16;i++)d.push((1500+tick+i)&0xFF,(1500+tick+i)>>8);return new Uint8Array(d);}
+function makeTelem(tick){ const types=['ATT','GPS','BAT'];const t=tick%3;
+  return {type:t,typeName:types[t],data:makePayload(types[t]+':'+tick)};}
+
+function runSimulation(cfg){
+  const rng=new Rand(cfg.seed);
+  let ch;
+  switch(cfg.model){
+    case 'burst': ch=new BurstCh(cfg.loss,cfg.burstBad,cfg.burstToBad,cfg.burstToGood,rng);break;
+    case 'asymmetric': ch=new AsymCh(cfg.loss,cfg.dlLoss,rng);break;
+    case 'blackout': ch=new BlackoutCh(cfg.loss,cfg.boStart,cfg.boEnd,cfg.boDir,rng);break;
+    default: ch=new UniformCh(cfg.loss,rng);
+  }
+  const ulSender=new ReliableSender(0),ulReceiver=new ReliableReceiver(0);
+  const dlSender=new ReliableSender(0),dlReceiver=new ReliableReceiver(0);
+  const ulLqm=new LinkQualityMonitor(50),dlLqm=new LinkQualityMonitor(50);
+
+  const ticks=[];
+  let ulSent=0,ulLost=0,dlSent=0,dlLost=0,standaloneAcks=0;
+
+  // Build schedule maps — each entry carries an id for status tracking
+  const ulSched={},dlSched={};
+  cfg.messages.forEach((m,i)=>{
+    const s=m.dir==='ul'?ulSched:dlSched;
+    if(!s[m.tick])s[m.tick]=[];
+    s[m.tick].push({payload:makePayload(m.label+':DATA'),label:m.label,id:i});
+  });
+
+  const totalReliable=cfg.messages.length;
+  const reliableStatus=cfg.messages.map((m,i)=>({...m,id:i,status:'pending',seq:null,latency:null,retx:0}));
+
+  for(let t=0;t<cfg.totalTicks;t++){
+    if(ch.setTick)ch.setTick(t);
+    const tickData={tick:t,events:[],particles:[]};
+
+    // Timers
+    for(const ev of ulSender.tick(t)){
+      tickData.events.push({type:ev.event==='failed'?'fail':'retx',dir:'ul',ch:'reliable',msg:`UL ${ev.event} SEQ=${ev.seq} "${ev.label}" ${ev.attempt?'#'+ev.attempt:''}`});
+      if(ev.event==='failed'){const rs=reliableStatus.find(r=>r.dir==='ul'&&r.label===ev.label&&(r.status==='inflight'||r.status==='queued'));if(rs)rs.status='failed';}
+    }
+    for(const ev of dlSender.tick(t)){
+      tickData.events.push({type:ev.event==='failed'?'fail':'retx',dir:'dl',ch:'reliable',msg:`DL ${ev.event} SEQ=${ev.seq} "${ev.label}" ${ev.attempt?'#'+ev.attempt:''}`});
+      if(ev.event==='failed'){const rs=reliableStatus.find(r=>r.dir==='dl'&&r.label===ev.label&&(r.status==='inflight'||r.status==='queued'));if(rs)rs.status='failed';}
+    }
+
+    // Enqueue
+    if(ulSched[t])for(const m of ulSched[t]){
+      ulSender.queueMessage(m.payload,m.label);
+      tickData.events.push({type:'app',dir:'ul',ch:'reliable',msg:`GCS enqueues "${m.label}"`});
+      const rs=reliableStatus.find(r=>r.id===m.id);if(rs)rs.status='queued';
+    }
+    if(dlSched[t])for(const m of dlSched[t]){
+      dlSender.queueMessage(m.payload,m.label);
+      tickData.events.push({type:'app',dir:'dl',ch:'reliable',msg:`UAV enqueues "${m.label}"`});
+      const rs=reliableStatus.find(r=>r.id===m.id);if(rs)rs.status='queued';
+    }
+
+    // Prepare UL
+    const dlAck=dlReceiver.getAck();
+    let ulFrame,ulMeta;
+    if(ulSender.hasWork()){
+      const[f,m]=ulSender.getFrame(dlAck,t);
+      if(f){ulFrame=f;ulMeta={ch:'reliable',seq:m.seq,label:m.label,isRetx:m.isRetx,retxCount:m.retxCount,hasAck:!!dlAck,rto:m.rto};
+        if(dlAck)dlReceiver.markAckSent(t);
+        tickData.events.push({type:m.isRetx?'retx':'rel',dir:'ul',ch:'reliable',msg:`UL TX reliable SEQ=${m.seq} "${m.label}"${m.isRetx?' RETX#'+m.retxCount:''} rto=${m.rto}`});
+        const rs=reliableStatus.find(r=>r.dir==='ul'&&r.label===m.label&&(r.status==='queued'||r.status==='inflight'));
+        if(rs){rs.status='inflight';rs.seq=m.seq;if(m.isRetx)rs.retx=m.retxCount;}
+      }
+    }
+    if(!ulFrame){
+      // Check standalone ACK trigger
+      if(dlReceiver.needsStandaloneAck(t)&&dlAck){
+        ulFrame=buildAckOnly(dlAck);ulMeta={ch:'ack_only',hasAck:true};
+        dlReceiver.markAckSent(t);standaloneAcks++;
+        tickData.events.push({type:'ack',dir:'ul',ch:'ack_only',msg:`UL TX standalone ACK-only frame`});
+      }else if(cfg.ulUnrelInterval>0&&t%cfg.ulUnrelInterval===0){
+        ulFrame=buildUnreliable(0,makeRC(t),dlAck);ulMeta={ch:'unreliable',type:'RC',hasAck:!!dlAck};
+        if(dlAck)dlReceiver.markAckSent(t);
+      }
+    }
+
+    // Prepare DL
+    const ulAck=ulReceiver.getAck();
+    let dlFrame,dlMeta;
+    if(dlSender.hasWork()){
+      const[f,m]=dlSender.getFrame(ulAck,t);
+      if(f){dlFrame=f;dlMeta={ch:'reliable',seq:m.seq,label:m.label,isRetx:m.isRetx,retxCount:m.retxCount,hasAck:!!ulAck,rto:m.rto};
+        if(ulAck)ulReceiver.markAckSent(t);
+        tickData.events.push({type:m.isRetx?'retx':'rel',dir:'dl',ch:'reliable',msg:`DL TX reliable SEQ=${m.seq} "${m.label}"${m.isRetx?' RETX#'+m.retxCount:''} rto=${m.rto}`});
+        const rs=reliableStatus.find(r=>r.dir==='dl'&&r.label===m.label&&(r.status==='queued'||r.status==='inflight'));
+        if(rs){rs.status='inflight';rs.seq=m.seq;if(m.isRetx)rs.retx=m.retxCount;}
+      }
+    }
+    if(!dlFrame){
+      if(ulReceiver.needsStandaloneAck(t)&&ulAck){
+        dlFrame=buildAckOnly(ulAck);dlMeta={ch:'ack_only',hasAck:true};
+        ulReceiver.markAckSent(t);standaloneAcks++;
+        tickData.events.push({type:'ack',dir:'dl',ch:'ack_only',msg:`DL TX standalone ACK-only frame`});
+      }else if(cfg.dlUnrelInterval>0&&t%cfg.dlUnrelInterval===0){
+        const tm=makeTelem(t);dlFrame=buildUnreliable(tm.type,tm.data,ulAck);
+        dlMeta={ch:'unreliable',type:tm.typeName,hasAck:!!ulAck};
+        if(ulAck)ulReceiver.markAckSent(t);
+      }
+    }
+
+    // Channel
+    let ulOk=false,dlOk=false;
+    if(ulFrame){
+      ulOk=ch.test('ul');ulSent++;
+      if(!ulOk)ulLost++;
+      ulLqm.record(ulOk);
+      tickData.particles.push({dir:'ul',meta:ulMeta,lost:!ulOk,frame:ulFrame});
+      tickData.events.push({type:ulOk?'ok':'lost',dir:'ul',ch:ulMeta.ch,msg:`UL ${ulOk?'✓ delivered':'✗ LOST'} [${ulMeta.ch}${ulMeta.ch==='reliable'?' SEQ='+ulMeta.seq:''}]`});
+    }else{
+      ulLqm.record(false); // idle slot counts as no delivery for LQ
+    }
+    if(dlFrame){
+      dlOk=ch.test('dl');dlSent++;
+      if(!dlOk)dlLost++;
+      dlLqm.record(dlOk);
+      tickData.particles.push({dir:'dl',meta:dlMeta,lost:!dlOk,frame:dlFrame});
+      tickData.events.push({type:dlOk?'ok':'lost',dir:'dl',ch:dlMeta.ch,msg:`DL ${dlOk?'✓ delivered':'✗ LOST'} [${dlMeta.ch}${dlMeta.ch==='reliable'?' SEQ='+dlMeta.seq:''}]`});
+    }else{
+      dlLqm.record(false);
+    }
+
+    // Process received
+    if(dlFrame&&dlOk){
+      const d=decodeFrame(dlFrame);
+      if(d){
+        if(d.ack_present){
+          for(const ev of ulSender.processAck(d.ack_sid,d.ack_cack,d.ack_sack,t)){
+            tickData.events.push({type:'ack',dir:'ul',ch:'reliable',msg:`GCS got ACK: ${ev.event} SEQ=${ev.seq} "${ev.label}" lat=${ev.latency}`});
+            if(ev.event==='delivered'){const rs=reliableStatus.find(r=>r.dir==='ul'&&r.label===ev.label&&r.status==='inflight');
+              if(rs){rs.status='delivered';rs.latency=ev.latency;}}
+          }
+        }
+        if(d.reliable){dlReceiver.receive(d.seq,d.frag,d.more_frag,d.payload,t);
+          for(const p of dlReceiver.popDelivered())tickData.events.push({type:'app',dir:'dl',ch:'reliable',msg:`GCS APP received DL reliable`});}
+      }
+    }
+    if(ulFrame&&ulOk){
+      const d=decodeFrame(ulFrame);
+      if(d){
+        if(d.ack_present){
+          for(const ev of dlSender.processAck(d.ack_sid,d.ack_cack,d.ack_sack,t)){
+            tickData.events.push({type:'ack',dir:'dl',ch:'reliable',msg:`UAV got ACK: ${ev.event} SEQ=${ev.seq} "${ev.label}" lat=${ev.latency}`});
+            if(ev.event==='delivered'){const rs=reliableStatus.find(r=>r.dir==='dl'&&r.label===ev.label&&r.status==='inflight');
+              if(rs){rs.status='delivered';rs.latency=ev.latency;}}
+          }
+        }
+        if(d.reliable){ulReceiver.receive(d.seq,d.frag,d.more_frag,d.payload,t);
+          for(const p of ulReceiver.popDelivered())tickData.events.push({type:'app',dir:'ul',ch:'reliable',msg:`UAV APP received UL reliable`});}
+      }
+    }
+
+    tickData.stats={ulSent,ulLost,dlSent,dlLost,
+      relDelivered:reliableStatus.filter(r=>r.status==='delivered').length,
+      relTotal:totalReliable,
+      ulLQ:ulLqm.qualityPct,dlLQ:dlLqm.qualityPct,
+      ulRto:ulSender.rto,dlRto:dlSender.rto,standaloneAcks};
+    tickData.reliableStatus=reliableStatus.map(r=>({...r}));
+    ticks.push(tickData);
+  }
+
+  // Mark any remaining inflight/queued messages as "timeout" (sim ended before resolution)
+  for(const rs of reliableStatus){
+    if(rs.status==='inflight'||rs.status==='queued') rs.status='timeout';
+  }
+  // Count timeouts
+  const ulTimeout=reliableStatus.filter(r=>r.dir==='ul'&&r.status==='timeout').length;
+  const dlTimeout=reliableStatus.filter(r=>r.dir==='dl'&&r.status==='timeout').length;
+
+  return {ticks,channelName:ch.name,reliableStatus,
+    summary:{ulSent,ulLost,dlSent,dlLost,
+      ulDelivered:ulSender.delivered.length,ulFailed:ulSender.failed.length,
+      dlDelivered:dlSender.delivered.length,dlFailed:dlSender.failed.length,
+      ulTimeout,dlTimeout,standaloneAcks,
+      ulLQ:ulLqm.qualityPct,dlLQ:dlLqm.qualityPct,
+      ulRto:ulSender.rto,dlRto:dlSender.rto,
+      ulRttEst:ulSender.rttInit?ulSender.rttEst.toFixed(1):null,
+      dlRttEst:dlSender.rttInit?dlSender.rttEst.toFixed(1):null,
+      totalReliable,delivered:ulSender.delivered.concat(dlSender.delivered),
+      failed:ulSender.failed.concat(dlSender.failed)}};
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// Canvas Renderer
+// ═══════════════════════════════════════════════════════════════════════
+const canvas=document.getElementById('canvas');
+const ctx=canvas.getContext('2d');
+let W,H;
+function resize(){const r=canvas.parentElement.getBoundingClientRect();
+  canvas.width=r.width*devicePixelRatio;canvas.height=r.height*devicePixelRatio;
+  W=r.width;H=r.height;ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);}
+window.addEventListener('resize',resize);resize();
+
+// Splitter drag
+(function(){
+  const splitter=document.getElementById('splitter');
+  const canvasArea=document.querySelector('.canvas-area');
+  const main=document.querySelector('.main');
+  let dragging=false,startY=0,startH=0;
+  splitter.addEventListener('mousedown',function(e){
+    dragging=true;startY=e.clientY;startH=canvasArea.offsetHeight;
+    splitter.classList.add('dragging');
+    document.body.style.cursor='row-resize';document.body.style.userSelect='none';
+    e.preventDefault();
+  });
+  document.addEventListener('mousemove',function(e){
+    if(!dragging)return;
+    const dy=e.clientY-startY;
+    const newH=Math.max(140,Math.min(startH+dy,main.offsetHeight-120));
+    canvasArea.style.height=newH+'px';
+    resize();
+  });
+  document.addEventListener('mouseup',function(){
+    if(!dragging)return;
+    dragging=false;splitter.classList.remove('dragging');
+    document.body.style.cursor='';document.body.style.userSelect='';
+  });
+})();
+
+// Node positions
+const NODE_R=44;
+function gcsPos(){return{x:90,y:H/2};}
+function uavPos(){return{x:W-90,y:H/2};}
+
+// Active particles
+let activeParticles=[];
+let flashEffects=[];
+
+function addParticle(dir,meta,lost,startTime,duration){
+  const isRel=meta.ch==='reliable';const isRetx=meta.isRetx;
+  const color=lost?'#e74c3c':isRetx?'#e056a0':isRel?'#3498db':'#27ae60';
+  const label=isRel?`R${meta.seq}`:(meta.type||'');
+  const hasAck=meta.hasAck;
+  // UL: left→right (y offset up), DL: right→left (y offset down)
+  const yOff=dir==='ul'?-30:30;
+  const from=dir==='ul'?gcsPos():uavPos();
+  const to=dir==='ul'?uavPos():gcsPos();
+  const lostAt=lost?0.3+Math.random()*0.4:1;
+  activeParticles.push({dir,color,label,hasAck,lost,isRel,isRetx,
+    fromX:from.x,fromY:from.y+yOff,toX:to.x,toY:to.y+yOff,
+    startTime,duration,lostAt,alpha:1});
+}
+
+function addFlash(x,y,color,startTime){
+  flashEffects.push({x,y,color,startTime,duration:400});
+}
+
+function drawNode(x,y,label,color){
+  // Glow
+  const grad=ctx.createRadialGradient(x,y,NODE_R*0.5,x,y,NODE_R*1.5);
+  grad.addColorStop(0,color+'40');grad.addColorStop(1,'transparent');
+  ctx.fillStyle=grad;ctx.beginPath();ctx.arc(x,y,NODE_R*1.5,0,Math.PI*2);ctx.fill();
+  // Circle
+  ctx.beginPath();ctx.arc(x,y,NODE_R,0,Math.PI*2);
+  ctx.fillStyle='#1a2332';ctx.fill();
+  ctx.strokeStyle=color;ctx.lineWidth=2.5;ctx.stroke();
+  // Label
+  ctx.font='bold 16px Inter,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.strokeStyle='#0f1923';ctx.lineWidth=3;ctx.strokeText(label,x,y);
+  ctx.fillStyle=color;ctx.fillText(label,x,y);
+}
+
+function drawChannel(y,label,dir){
+  const g=gcsPos(),u=uavPos();
+  const x1=g.x+NODE_R+10,x2=u.x-NODE_R-10;
+  ctx.strokeStyle='#2a3a4e';ctx.lineWidth=1;ctx.setLineDash([4,4]);
+  ctx.beginPath();ctx.moveTo(x1,y);ctx.lineTo(x2,y);ctx.stroke();ctx.setLineDash([]);
+  // Arrow
+  const ax=dir==='ul'?x2-8:x1+8,ay=y;
+  ctx.fillStyle='#2a3a4e';ctx.beginPath();
+  if(dir==='ul'){ctx.moveTo(x2,y);ctx.lineTo(x2-10,y-5);ctx.lineTo(x2-10,y+5);}
+  else{ctx.moveTo(x1,y);ctx.lineTo(x1+10,y-5);ctx.lineTo(x1+10,y+5);}
+  ctx.fill();
+  // Label
+  ctx.font='12px Inter,sans-serif';ctx.textAlign='center';
+  ctx.strokeStyle='#0f1923';ctx.lineWidth=3;ctx.strokeText(label,(x1+x2)/2,y-12);
+  ctx.fillStyle='#8899aa';ctx.fillText(label,(x1+x2)/2,y-12);
+}
+
+function drawParticle(p,now){
+  const elapsed=now-p.startTime;
+  const progress=Math.min(elapsed/p.duration,1);
+  if(progress>=1&&!p.lost){p.alpha-=0.05;if(p.alpha<=0)return false;}
+  if(p.lost&&progress>=p.lostAt){p.alpha-=0.03;if(p.alpha<=0)return false;}
+  const t=p.lost?Math.min(progress,p.lostAt):progress;
+  const eased=t<0.5?2*t*t:1-(-2*t+2)**2/2; // ease in-out quad
+  const x=p.fromX+(p.toX-p.fromX)*eased;
+  const y=p.fromY+(p.toY-p.fromY)*eased+Math.sin(eased*Math.PI)*-15;
+  const size=p.isRel?10:7;
+  ctx.globalAlpha=p.alpha;
+  // Trail
+  if(progress<(p.lost?p.lostAt:1)){
+    const tLen=0.15;const t0=Math.max(0,t-tLen);
+    const e0=t0<0.5?2*t0*t0:1-(-2*t0+2)**2/2;
+    const tx=p.fromX+(p.toX-p.fromX)*e0;
+    const ty=p.fromY+(p.toY-p.fromY)*e0+Math.sin(e0*Math.PI)*-15;
+    const tg=ctx.createLinearGradient(tx,ty,x,y);
+    tg.addColorStop(0,'transparent');tg.addColorStop(1,p.color+'80');
+    ctx.strokeStyle=tg;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(tx,ty);ctx.lineTo(x,y);ctx.stroke();
+  }
+  // Packet body
+  ctx.fillStyle=p.color;
+  if(p.isRel){ctx.fillRect(x-size,y-size/2,size*2,size);}
+  else{ctx.beginPath();ctx.arc(x,y,size/2,0,Math.PI*2);ctx.fill();}
+  // Label
+  if(p.label){ctx.font='bold 11px Inter';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.strokeStyle='#000';ctx.lineWidth=2.5;ctx.strokeText(p.label,x,y);
+    ctx.fillStyle='#fff';ctx.fillText(p.label,x,y);}
+  // ACK dot
+  if(p.hasAck){ctx.fillStyle='#f39c12';ctx.beginPath();ctx.arc(x+size+3,y-size/2,3,0,Math.PI*2);ctx.fill();}
+  // Lost X
+  if(p.lost&&progress>=p.lostAt){
+    ctx.strokeStyle='#e74c3c';ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(x-10,y-10);ctx.lineTo(x+10,y+10);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x+10,y-10);ctx.lineTo(x-10,y+10);ctx.stroke();
+    // Scatter particles
+    for(let i=0;i<4;i++){
+      const ang=i*Math.PI/2+(elapsed%200)/200*Math.PI;
+      const d=8+elapsed*0.02;
+      ctx.fillStyle='#e74c3c';ctx.globalAlpha=p.alpha*0.5;
+      ctx.beginPath();ctx.arc(x+Math.cos(ang)*d,y+Math.sin(ang)*d,2,0,Math.PI*2);ctx.fill();
+    }
+  }
+  ctx.globalAlpha=1;
+  return true;
+}
+
+function drawFlash(f,now){
+  const elapsed=now-f.startTime;if(elapsed>f.duration)return false;
+  const t=elapsed/f.duration;
+  ctx.globalAlpha=1-t;ctx.strokeStyle=f.color;ctx.lineWidth=2;
+  ctx.beginPath();ctx.arc(f.x,f.y,10+t*25,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=1;
+  return true;
+}
+
+// Blackout overlay
+let blackoutActive=false;
+function drawBlackout(){
+  if(!blackoutActive)return;
+  ctx.fillStyle='rgba(0,0,0,0.3)';ctx.fillRect(0,0,W,H);
+  ctx.font='bold 20px Inter';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.strokeStyle='#000';ctx.lineWidth=4;ctx.strokeText('⚡ BLACKOUT ⚡',W/2,H/2);
+  ctx.fillStyle='#e74c3c';ctx.fillText('⚡ BLACKOUT ⚡',W/2,H/2);
+}
+
+// Link quality state for canvas rendering
+let curUlLQ=100,curDlLQ=100,curUlRto=RTO_TICKS,curDlRto=RTO_TICKS;
+
+function drawLinkQuality(x,y,label,lq,rto){
+  const barW=64,barH=8,bx=x-barW/2,by=y+NODE_R+14;
+  // Background
+  ctx.fillStyle='#1a2332';ctx.fillRect(bx,by,barW,barH);
+  // Fill
+  const pct=lq/100;
+  const c=pct>=0.8?'#2ecc71':pct>=0.5?'#f39c12':'#e74c3c';
+  ctx.fillStyle=c;ctx.fillRect(bx,by,barW*pct,barH);
+  // Border
+  ctx.strokeStyle='#2a3a4e';ctx.lineWidth=1;ctx.strokeRect(bx,by,barW,barH);
+  // Text
+  ctx.font='11px Inter';ctx.textAlign='center';ctx.textBaseline='top';
+  ctx.strokeStyle='#0f1923';ctx.lineWidth=2.5;ctx.strokeText(`LQ:${lq}%  RTO:${rto}`,x,by+barH+3);
+  ctx.fillStyle=c;ctx.fillText(`LQ:${lq}%  RTO:${rto}`,x,by+barH+3);
+}
+
+function render(now){
+  ctx.clearRect(0,0,W,H);
+  const g=gcsPos(),u=uavPos();
+  // Channels
+  drawChannel(g.y-30,'Uplink (GCS → UAV)','ul');
+  drawChannel(g.y+30,'Downlink (UAV → GCS)','dl');
+  // Nodes
+  drawNode(g.x,g.y,'GCS','#00b4d8');
+  drawNode(u.x,u.y,'UAV','#2ecc71');
+  // Link quality indicators
+  if(simData){
+    drawLinkQuality(g.x,g.y,'UL',curUlLQ,curUlRto);
+    drawLinkQuality(u.x,u.y,'DL',curDlLQ,curDlRto);
+  }
+  // Particles
+  activeParticles=activeParticles.filter(p=>drawParticle(p,now));
+  flashEffects=flashEffects.filter(f=>drawFlash(f,now));
+  drawBlackout();
+  // Legend
+  ctx.globalAlpha=0.85;ctx.font='12px Inter';ctx.textAlign='left';
+  const lx=12,ly=H-110;
+  // background card
+  ctx.fillStyle='rgba(15,25,35,0.75)';
+  const lgW=120,lgH=105,lgR=6;
+  ctx.beginPath();ctx.moveTo(lx-6+lgR,ly-8);ctx.arcTo(lx-6+lgW,ly-8,lx-6+lgW,ly-8+lgH,lgR);
+  ctx.arcTo(lx-6+lgW,ly-8+lgH,lx-6,ly-8+lgH,lgR);ctx.arcTo(lx-6,ly-8+lgH,lx-6,ly-8,lgR);
+  ctx.arcTo(lx-6,ly-8,lx-6+lgW,ly-8,lgR);ctx.fill();
+  ctx.strokeStyle='#2a3a4e';ctx.lineWidth=1;ctx.stroke();
+  // items
+  const lgItems=[
+    {color:'#27ae60',shape:'circle',text:'Unreliable'},
+    {color:'#3498db',shape:'rect',  text:'Reliable'},
+    {color:'#e056a0',shape:'rect',  text:'Retransmit'},
+    {color:'#f39c12',shape:'dot',   text:'Has ACK'},
+    {color:'#00e5ff',shape:'line',  text:'ACK-Only'},
+  ];
+  lgItems.forEach((it,i)=>{
+    const iy=ly+i*19;
+    ctx.fillStyle=it.color;
+    if(it.shape==='circle'){ctx.beginPath();ctx.arc(lx+5,iy+4,5,0,Math.PI*2);ctx.fill();}
+    else if(it.shape==='rect'){ctx.fillRect(lx,iy,12,8);}
+    else if(it.shape==='dot'){ctx.beginPath();ctx.arc(lx+5,iy+4,4,0,Math.PI*2);ctx.fill();}
+    else if(it.shape==='line'){ctx.fillRect(lx,iy+2,12,4);}
+    ctx.fillStyle='#c0ccda';ctx.fillText(it.text,lx+18,iy+9);
+  });
+  ctx.globalAlpha=1;
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// Playback Controller
+// ═══════════════════════════════════════════════════════════════════════
+let simData=null, playTick=0, playing=false, playSpeed=1;
+let lastFrameTime=0, tickAccum=0, animTime=0;
+const SPEEDS=[{label:'0.2x',val:0.2},{label:'0.5x',val:0.5},{label:'1x',val:1},
+  {label:'2x',val:2},{label:'5x',val:5},{label:'Max',val:100}];
+let selectedSpeed=2; // index into SPEEDS (1x)
+
+function msPerTick(){return Math.max(10, 500/SPEEDS[selectedSpeed].val);}
+
+function playbackLoop(timestamp){
+  if(!simData||!playing){requestAnimationFrame(playbackLoop);render(performance.now());return;}
+  if(!lastFrameTime)lastFrameTime=timestamp;
+  const dt=timestamp-lastFrameTime;lastFrameTime=timestamp;
+  tickAccum+=dt;
+  const mpt=msPerTick();
+  while(tickAccum>=mpt&&playTick<simData.ticks.length){
+    advanceTick(performance.now());
+    tickAccum-=mpt;
+    if(playTick>=simData.ticks.length){playing=false;updateButtons();break;}
+  }
+  render(performance.now());
+  requestAnimationFrame(playbackLoop);
+}
+
+function advanceTick(now){
+  if(playTick>=simData.ticks.length)return;
+  const td=simData.ticks[playTick];
+  const dur=msPerTick()*0.8;
+
+  // Check blackout
+  const cfg=getConfig();
+  blackoutActive=cfg.model==='blackout'&&playTick>=cfg.boStart&&playTick<cfg.boEnd;
+
+  // Add particles
+  for(const p of td.particles){
+    addParticle(p.dir,p.meta,p.lost,now,dur);
+    if(!p.lost){
+      const target=p.dir==='ul'?uavPos():gcsPos();
+      const yOff=p.dir==='ul'?-30:30;
+      setTimeout(()=>addFlash(target.x,target.y+yOff,p.meta.ch==='reliable'?'#3498db':'#27ae60',performance.now()),dur*0.9);
+    }
+  }
+
+  // Update UI
+  updateOverlay(td.stats);
+  curUlLQ=td.stats.ulLQ!==undefined?td.stats.ulLQ:100;
+  curDlLQ=td.stats.dlLQ!==undefined?td.stats.dlLQ:100;
+  curUlRto=td.stats.ulRto||RTO_TICKS;
+  curDlRto=td.stats.dlRto||RTO_TICKS;
+  appendLogEntries(td.events,td.tick);
+  updateMsgTracker(td.reliableStatus);
+  updateProgress();
+  playTick++;
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// UI
+// ═══════════════════════════════════════════════════════════════════════
+
+// -- Presets --
+const PRESETS=[
+  {name:'Good',model:'uniform',loss:0.08,color:'#2ecc71'},
+  {name:'Medium',model:'uniform',loss:0.20,color:'#f39c12'},
+  {name:'Bad',model:'uniform',loss:0.40,color:'#e67e22'},
+  {name:'Terrible',model:'uniform',loss:0.70,color:'#e74c3c'},
+  {name:'Burst',model:'burst',loss:0.05,burstBad:0.85,burstToBad:0.12,burstToGood:0.15,color:'#9b59b6'},
+  {name:'Blackout',model:'blackout',loss:0.05,boStart:150,boEnd:300,boDir:'both',color:'#c0392b'},
+];
+function initPresets(){
+  const el=document.getElementById('presets');
+  PRESETS.forEach((p,i)=>{
+    const b=document.createElement('button');b.className='preset-btn';b.textContent=p.name;
+    b.style.borderColor=p.color+'60';
+    b.onclick=()=>{applyPreset(i);document.querySelectorAll('.preset-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');};
+    el.appendChild(b);
+  });
+}
+function applyPreset(i){
+  const p=PRESETS[i];
+  document.getElementById('ch-model').value=p.model;
+  document.getElementById('loss').value=Math.round(p.loss*100);
+  updateModelUI();updateSliderVals();
+  if(p.model==='burst'){
+    document.getElementById('burst-bad').value=Math.round(p.burstBad*100);
+    document.getElementById('burst-to-bad').value=Math.round(p.burstToBad*100);
+    document.getElementById('burst-to-good').value=Math.round(p.burstToGood*100);
+    updateSliderVals();
+  }
+  if(p.model==='blackout'){
+    document.getElementById('bo-start').value=p.boStart;
+    document.getElementById('bo-end').value=p.boEnd;
+    document.getElementById('bo-dir').value=p.boDir;
+  }
+}
+
+// -- Model selection --
+function updateModelUI(){
+  const m=document.getElementById('ch-model').value;
+  document.getElementById('burst-params').style.display=m==='burst'?'block':'none';
+  document.getElementById('asym-params').style.display=m==='asymmetric'?'block':'none';
+  document.getElementById('blackout-params').style.display=m==='blackout'?'block':'none';
+  // Update loss label based on model
+  const lbl=document.getElementById('loss-label');
+  if(m==='burst') lbl.textContent='Good State Loss';
+  else if(m==='asymmetric') lbl.textContent='UL Loss Rate';
+  else if(m==='blackout') lbl.textContent='Base Loss Rate';
+  else lbl.textContent='Loss Rate';
+}
+document.getElementById('ch-model').addEventListener('change',updateModelUI);
+
+// -- Sliders --
+function updateSliderVals(){
+  document.getElementById('loss-val').textContent=document.getElementById('loss').value+'%';
+  document.getElementById('burst-bad-val').textContent=document.getElementById('burst-bad').value+'%';
+  document.getElementById('burst-to-bad-val').textContent=document.getElementById('burst-to-bad').value+'%';
+  document.getElementById('burst-to-good-val').textContent=document.getElementById('burst-to-good').value+'%';
+  document.getElementById('dl-loss-val').textContent=document.getElementById('dl-loss').value+'%';
+}
+document.querySelectorAll('input[type=range]').forEach(el=>el.addEventListener('input',updateSliderVals));
+
+// -- Duration ↔ Ticks sync --
+function syncTicks(){
+  const hz=parseInt(document.getElementById('tickhz').value)||20;
+  const sec=parseFloat(document.getElementById('sim-sec').value)||30;
+  const ticks=Math.round(hz*sec);
+  document.getElementById('ticks').value=ticks;
+  document.getElementById('sim-ticks-display').textContent=ticks;
+}
+document.getElementById('sim-sec').addEventListener('input',syncTicks);
+document.getElementById('tickhz').addEventListener('input',syncTicks);
+
+// -- Messages --
+let messages=[
+  {dir:'ul',tick:40, label:'SET_WAYPOINT_1'},
+  {dir:'dl',tick:60, label:'LOW_BATTERY'},
+  {dir:'ul',tick:120,label:'SET_WAYPOINT_2'},
+  {dir:'ul',tick:200,label:'ARM_MOTORS'},
+  {dir:'dl',tick:250,label:'GPS_DEGRADED'},
+  {dir:'ul',tick:300,label:'SET_WAYPOINT_3'},
+  {dir:'dl',tick:360,label:'WIND_ALERT'},
+  {dir:'ul',tick:420,label:'CHANGE_ALT'},
+  {dir:'ul',tick:480,label:'RTH'},
+  {dir:'dl',tick:520,label:'LOW_BAT_CRITICAL'},
+];
+function renderMessages(){
+  const el=document.getElementById('msg-list');el.innerHTML='';
+  messages.forEach((m,i)=>{
+    el.innerHTML+=`<div class="msg-item"><span class="dot ${m.dir}"></span>
+    <span>${m.dir.toUpperCase()} t=${m.tick} "${m.label}"</span>
+    <span class="remove" onclick="removeMsg(${i})">×</span></div>`;
+  });
+}
+window.removeMsg=function(i){messages.splice(i,1);renderMessages();};
+window.switchMsgTab=function(idx,el){
+  document.querySelectorAll('.msg-add-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.msg-add-body').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  const body=document.getElementById('msg-tab-'+idx);
+  if(body)body.classList.add('active');
+};
+window.addMsg=function(){
+  const dir=document.getElementById('add-dir').value;
+  const tick=parseInt(document.getElementById('add-tick').value)||0;
+  const label=document.getElementById('add-label').value||'MSG';
+  messages.push({dir,tick,label});renderMessages();
+};
+window.addBurst=function(){
+  const dir=document.getElementById('burst-dir').value;
+  const start=parseInt(document.getElementById('burst-start').value)||0;
+  const count=Math.min(parseInt(document.getElementById('burst-count').value)||5,50);
+  const prefix=document.getElementById('burst-label').value||'MSG';
+  for(let i=0;i<count;i++){
+    messages.push({dir,tick:start+i,label:`${prefix}_${i}`});
+  }
+  renderMessages();
+};
+const defaultMessages=[
+  {dir:'ul',tick:40, label:'SET_WAYPOINT_1'},
+  {dir:'dl',tick:60, label:'LOW_BATTERY'},
+  {dir:'ul',tick:120,label:'SET_WAYPOINT_2'},
+  {dir:'ul',tick:200,label:'ARM_MOTORS'},
+  {dir:'dl',tick:250,label:'GPS_DEGRADED'},
+  {dir:'ul',tick:300,label:'SET_WAYPOINT_3'},
+  {dir:'dl',tick:360,label:'WIND_ALERT'},
+  {dir:'ul',tick:420,label:'CHANGE_ALT'},
+  {dir:'ul',tick:480,label:'RTH'},
+  {dir:'dl',tick:520,label:'LOW_BAT_CRITICAL'},
+];
+window.clearMsgs=function(){messages.length=0;renderMessages();};
+
+// -- Speed buttons --
+function initSpeed(){
+  const el=document.getElementById('speed-btns');
+  SPEEDS.forEach((s,i)=>{
+    const b=document.createElement('button');b.className='speed-btn'+(i===selectedSpeed?' active':'');
+    b.textContent=s.label;
+    b.onclick=()=>{selectedSpeed=i;document.querySelectorAll('.speed-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');};
+    el.appendChild(b);
+  });
+}
+
+// -- Tabs --
+const TABS=['Log','Messages','Statistics'];
+function initTabs(){
+  const bar=document.getElementById('tab-bar');
+  const content=document.getElementById('tab-content');
+  TABS.forEach((name,i)=>{
+    const t=document.createElement('div');t.className='tab'+(i===0?' active':'');t.textContent=name;
+    t.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');
+      document.querySelectorAll('.tab-pane').forEach(x=>x.classList.remove('active'));
+      document.getElementById('tab-'+i).classList.add('active');};
+    bar.appendChild(t);
+    const p=document.createElement('div');p.className='tab-pane'+(i===0?' active':'');p.id='tab-'+i;
+    content.appendChild(p);
+  });
+}
+
+// -- Log --
+let logFilter='all'; // 'all','reliable','unreliable'
+function initLogFilters(){
+  const el=document.getElementById('tab-0');
+  const bar=document.createElement('div');bar.className='log-filters';bar.id='log-filter-bar';
+  ['All','Reliable','Unreliable'].forEach(label=>{
+    const b=document.createElement('button');b.className='log-filter-btn'+(label==='All'?' active':'');
+    b.textContent=label;b.dataset.filter=label.toLowerCase();
+    b.onclick=()=>{
+      logFilter=b.dataset.filter;
+      bar.querySelectorAll('.log-filter-btn').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      applyLogFilter();
+    };
+    bar.appendChild(b);
+  });
+  el.appendChild(bar);
+}
+function applyLogFilter(){
+  const entries=document.querySelectorAll('#tab-0 .log-entry');
+  entries.forEach(e=>{
+    const ch=e.dataset.ch||'';
+    if(logFilter==='all') e.style.display='';
+    else if(logFilter==='reliable') e.style.display=(ch==='reliable'||ch==='ack_only')?'':'none';
+    else e.style.display=(ch==='unreliable')?'':'none';
+  });
+}
+function clearLog(){
+  const el=document.getElementById('tab-0');
+  const bar=document.getElementById('log-filter-bar');
+  el.innerHTML='';
+  if(bar)el.appendChild(bar);else initLogFilters();
+}
+function appendLogEntries(events,tick){
+  const el=document.getElementById('tab-0');
+  for(const e of events){
+    const div=document.createElement('div');div.className='log-entry '+e.type;
+    div.dataset.ch=e.ch||'';
+    div.innerHTML=`<span class="tick">[t=${tick}]</span> ${e.msg}`;
+    // apply current filter
+    if(logFilter==='reliable'&&e.ch!=='reliable'&&e.ch!=='ack_only') div.style.display='none';
+    else if(logFilter==='unreliable'&&e.ch!=='unreliable') div.style.display='none';
+    el.appendChild(div);
+  }
+  el.scrollTop=el.scrollHeight;
+}
+
+// -- Message tracker --
+function updateMsgTracker(statuses){
+  const el=document.getElementById('tab-1');
+  if(!statuses)return;
+  let html='<div class="msg-tracker">';
+  for(const s of statuses){
+    html+=`<div class="msg-track ${s.status}">
+      <div class="dir">${s.dir==='ul'?'UL (GCS→UAV)':'DL (UAV→GCS)'}</div>
+      <div class="name">${s.label}</div>
+      <div class="info">t=${s.tick} | ${s.status}${s.seq!==null?' SEQ='+s.seq:''}${s.latency!==null?' | lat='+s.latency+'t':''}${s.retx?' | retx='+s.retx:''}</div>
+    </div>`;
+  }
+  html+='</div>';el.innerHTML=html;
+}
+
+// -- Stats --
+function renderStats(){
+  if(!simData)return;
+  const s=simData.summary;const el=document.getElementById('tab-2');
+  const ms=parseInt(document.getElementById('tickhz').value)||20;
+  let html='<div class="stats-grid">';
+  html+=statCard(s.ulSent+s.dlSent,'Total Packets');
+  html+=statCard(s.ulLost+s.dlLost,`Lost (${((s.ulLost+s.dlLost)*100/(s.ulSent+s.dlSent)).toFixed(1)}%)`,'warn');
+  html+=statCard(`${s.ulDelivered}/${s.ulDelivered+s.ulFailed}`,'UL Reliable');
+  html+=statCard(`${s.dlDelivered}/${s.dlDelivered+s.dlFailed}`,'DL Reliable');
+  const ulAvg=s.delivered.filter(d=>messages.find(m=>m.dir==='ul'&&m.label===d.label));
+  const dlAvg=s.delivered.filter(d=>messages.find(m=>m.dir==='dl'&&m.label===d.label));
+  if(ulAvg.length)html+=statCard((ulAvg.reduce((a,b)=>a+b.latency,0)/ulAvg.length).toFixed(1)+'t','UL Avg Latency');
+  if(dlAvg.length)html+=statCard((dlAvg.reduce((a,b)=>a+b.latency,0)/dlAvg.length).toFixed(1)+'t','DL Avg Latency');
+  if(s.failed.length)html+=statCard(s.failed.length,'FAILED','fail');
+  if(s.ulTimeout+s.dlTimeout>0)html+=statCard(s.ulTimeout+s.dlTimeout,'TIMEOUT (sim ended)','warn');
+  html+=statCard(s.standaloneAcks||0,'Standalone ACKs');
+  html+=statCard((s.ulLQ||100)+'%','UL Link Quality');
+  html+=statCard((s.dlLQ||100)+'%','DL Link Quality');
+  html+=statCard(s.ulRto||RTO_TICKS,'UL Final RTO');
+  html+=statCard(s.dlRto||RTO_TICKS,'DL Final RTO');
+  if(s.ulRttEst)html+=statCard(s.ulRttEst+'t','UL RTT Est');
+  if(s.dlRttEst)html+=statCard(s.dlRttEst+'t','DL RTT Est');
+  html+='</div>';
+  // Delivered details
+  html+='<h3 style="margin:12px 0 8px;color:#58a6ff;font-size:14px;">Delivery Details</h3>';
+  if(s.delivered.length){
+    for(const d of s.delivered) html+=`<div class="log-entry ok">✓ SEQ=${d.seq} "${d.label}" latency=${d.latency} ticks (${d.latency*(1000/ms)}ms)</div>`;
+  }
+  if(s.failed.length){
+    for(const f of s.failed) html+=`<div class="log-entry lost">✗ SEQ=${f.seq} "${f.label}" FAILED</div>`;
+  }
+  el.innerHTML=html;
+}
+function statCard(v,l,cls){return `<div class="stat-card"><div class="v${cls?' '+cls:''}">${v}</div><div class="l">${l}</div></div>`;}
+
+// -- Overlay --
+function lqColor(pct){return pct>=80?'var(--ok)':pct>=50?'var(--warn)':'var(--fail)';}
+function updateOverlay(stats){
+  document.getElementById('ov-tick-val').textContent=playTick;
+  document.getElementById('ov-ul-sent').textContent=stats.ulSent;
+  document.getElementById('ov-ul-lost').textContent=stats.ulLost;
+  document.getElementById('ov-dl-sent').textContent=stats.dlSent;
+  document.getElementById('ov-dl-lost').textContent=stats.dlLost;
+  document.getElementById('ov-rel-d').textContent=stats.relDelivered;
+  document.getElementById('ov-rel-t').textContent=stats.relTotal;
+  // Link quality
+  const ulLQ=stats.ulLQ!==undefined?stats.ulLQ:100,dlLQ=stats.dlLQ!==undefined?stats.dlLQ:100;
+  const elUlLq=document.getElementById('ov-lq-ul'),elDlLq=document.getElementById('ov-lq-dl');
+  elUlLq.textContent=ulLQ+'%';elUlLq.style.color=lqColor(ulLQ);
+  elDlLq.textContent=dlLQ+'%';elDlLq.style.color=lqColor(dlLQ);
+  // RTO
+  document.getElementById('ov-rto-ul').textContent=stats.ulRto||RTO_TICKS;
+  document.getElementById('ov-rto-dl').textContent=stats.dlRto||RTO_TICKS;
+}
+function updateProgress(){
+  if(!simData)return;
+  const pct=playTick/simData.ticks.length*100;
+  document.getElementById('progress-fill').style.width=pct+'%';
+}
+window.seekProgress=function(e){
+  if(!simData)return;
+  const rect=e.currentTarget.getBoundingClientRect();
+  const pct=(e.clientX-rect.left)/rect.width;
+  const target=Math.floor(pct*simData.ticks.length);
+  replayTo(target);
+};
+
+function replayTo(target){
+  if(!simData)return;
+  // Reset state and replay events up to target
+  clearLog();
+  activeParticles=[];flashEffects=[];
+  playTick=0;
+  // Replay all ticks silently (no animation)
+  for(let i=0;i<Math.min(target,simData.ticks.length);i++){
+    const td=simData.ticks[i];
+    appendLogEntries(td.events,td.tick);
+    playTick=i+1;
+  }
+  if(target<simData.ticks.length){
+    const td=simData.ticks[Math.max(0,target-1)];
+    if(td){updateOverlay(td.stats);updateMsgTracker(td.reliableStatus);}
+  }
+  updateProgress();
+}
+
+// -- Controls --
+function getConfig(){
+  return{
+    model:document.getElementById('ch-model').value,
+    loss:parseInt(document.getElementById('loss').value)/100,
+    burstBad:parseInt(document.getElementById('burst-bad').value)/100,
+    burstToBad:parseInt(document.getElementById('burst-to-bad').value)/100,
+    burstToGood:parseInt(document.getElementById('burst-to-good').value)/100,
+    dlLoss:parseInt(document.getElementById('dl-loss').value)/100,
+    boStart:parseInt(document.getElementById('bo-start').value),
+    boEnd:parseInt(document.getElementById('bo-end').value),
+    boDir:document.getElementById('bo-dir').value,
+    totalTicks:parseInt(document.getElementById('ticks').value)||600,
+    tickHz:parseInt(document.getElementById('tickhz').value)||20,
+    seed:parseInt(document.getElementById('seed').value)||42,
+    messages:messages.slice(),
+    ulUnrelInterval:parseInt(document.getElementById('ul-unrel-interval').value),
+    dlUnrelInterval:parseInt(document.getElementById('dl-unrel-interval').value),
+  };
+}
+
+window.runSim=function(){
+  const cfg=getConfig();
+  // Reset
+  activeParticles=[];flashEffects=[];playTick=0;playing=false;blackoutActive=false;
+  clearLog();
+  document.getElementById('tab-1').innerHTML='';
+  document.getElementById('tab-2').innerHTML='';
+  tickAccum=0;lastFrameTime=0;
+
+  // Run simulation (instant)
+  simData=runSimulation(cfg);
+
+  // Start playback
+  playing=true;
+  updateButtons();
+};
+
+window.togglePause=function(){
+  if(!simData)return;
+  playing=!playing;lastFrameTime=0;tickAccum=0;
+  updateButtons();
+  if(playing&&playTick>=simData.ticks.length){
+    // Restart from beginning
+    replayTo(0);playTick=0;playing=true;updateButtons();
+  }
+};
+
+window.resetSim=function(){
+  simData=null;playTick=0;playing=false;blackoutActive=false;
+  activeParticles=[];flashEffects=[];
+  messages=defaultMessages.map(m=>({...m}));renderMessages();
+  clearLog();
+  document.getElementById('tab-1').innerHTML='';
+  document.getElementById('tab-2').innerHTML='';
+  document.getElementById('progress-fill').style.width='0%';
+  document.getElementById('ov-tick-val').textContent='—';
+  document.getElementById('ov-ul-sent').textContent='0';
+  document.getElementById('ov-ul-lost').textContent='0';
+  document.getElementById('ov-dl-sent').textContent='0';
+  document.getElementById('ov-dl-lost').textContent='0';
+  document.getElementById('ov-rel-d').textContent='0';
+  document.getElementById('ov-rel-t').textContent='0';
+  document.getElementById('ov-lq-ul').textContent='100%';document.getElementById('ov-lq-ul').style.color='var(--ok)';
+  document.getElementById('ov-lq-dl').textContent='100%';document.getElementById('ov-lq-dl').style.color='var(--ok)';
+  document.getElementById('ov-rto-ul').textContent=RTO_TICKS;
+  document.getElementById('ov-rto-dl').textContent=RTO_TICKS;
+  updateButtons();
+};
+
+function updateButtons(){
+  document.getElementById('btn-run').disabled=playing;
+  document.getElementById('btn-pause').disabled=!simData;
+  document.getElementById('btn-pause').textContent=playing?'Pause':'Resume';
+  if(simData&&playTick>=simData.ticks.length){
+    document.getElementById('btn-run').disabled=false;
+    document.getElementById('btn-pause').textContent='Replay';
+    renderStats();
+  }
+}
+
+// Watch for sim end
+let prevPlaying=false;
+function checkSimEnd(){
+  if(prevPlaying&&!playing&&simData&&playTick>=simData.ticks.length){renderStats();}
+  prevPlaying=playing;
+}
+setInterval(checkSimEnd,200);
+
+// ═══════════════════════════════════════════════════════════════════════
+// Init
+// ═══════════════════════════════════════════════════════════════════════
+initPresets();initSpeed();initTabs();initLogFilters();renderMessages();updateSliderVals();
+requestAnimationFrame(playbackLoop);
+</script>
+</body>
+</html>
